@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            background: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar {
+            width: 250px;
+            background: #f4f4f4;
+            overflow-y: auto;
+            padding: 10px;
+            border-right: 1px solid #ddd;
+        }
+        .main {
+            flex: 1;
+            padding: 10px;
+        }
+        .file-item {
+            cursor: pointer;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .file-item.selected {
+            background: #e0e0e0;
+        }
+        .file-item:hover {
+            background: #eee;
+        }
+        .preview {
+            margin-top: 20px;
+        }
+        .preview img {
+            max-width: 100%;
+            max-height: 400px;
+        }
+        .preview iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        .preview pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>File Explorer</h1>
+        </div>
+        <div class="content">
+            <div class="sidebar">
+                <button onclick="goBack()">Back</button>
+                <button onclick="goForward()">Forward</button>
+                <button onclick="refresh()">Refresh</button>
+                <div id="file-tree"></div>
+            </div>
+            <div class="main">
+                <div id="file-preview" class="preview"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPath = '/';
+        let history = [];
+        let historyIndex = -1;
+        let selectedFolder = null;
+
+        function fetchFileTree(path) {
+            fetch(`/api/file_explorer/list/?path=${encodeURIComponent(path)}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayFileTree(data);
+                    currentPath = path;
+                });
+        }
+
+        function displayFileTree(fileTree) {
+            const fileTreeContainer = document.getElementById('file-tree');
+            fileTreeContainer.innerHTML = '';
+
+            fileTree.forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.textContent = file.name;
+                item.onclick = (event) => handleFileClick(event, file);
+                fileTreeContainer.appendChild(item);
+            });
+        }
+
+        function handleFileClick(event, file) {
+            event.preventDefault();
+
+            if (file.extension === 'folder') {
+                if (event.detail === 2) { // Double-click to navigate
+                    history = history.slice(0, historyIndex + 1);
+                    history.push(currentPath);
+                    historyIndex++;
+                    fetchFileTree(file.path);
+                    selectedFolder = null; // Clear selection on navigation
+                } else { // Single-click to select
+                    clearSelection();
+                    event.currentTarget.classList.add('selected');
+                    selectedFolder = file.path;
+                }
+            } else {
+                previewFile(file.path);
+            }
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.file-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+
+        function previewFile(path) {
+            const filePreview = document.getElementById('file-preview');
+            fetch(`/api/file_explorer/download/?path=${encodeURIComponent(path)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const fileType = blob.type;
+                    const fileExtension = path.split('.').pop().toLowerCase();
+
+                    if (fileType.startsWith('image/')) {
+                        filePreview.innerHTML = `<img src="${url}" alt="Preview">`;
+                    } else if (fileExtension === 'txt') {
+                        // Read .txt file and display content
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            filePreview.innerHTML = `<pre>${event.target.result}</pre>`;
+                        };
+                        reader.readAsText(blob);
+                    } else if (fileExtension === 'pdf') {
+                        // Display PDF file
+                        filePreview.innerHTML = `<iframe src="${url}" type="application/pdf" width="100%" height="600px"></iframe>`;
+                    } else {
+                        filePreview.innerHTML = `<a href="${url}" download>Download File</a>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    const filePreview = document.getElementById('file-preview');
+                    filePreview.innerHTML = '<p>Unable to preview the file.</p>';
+                });
+        }
+
+        function goBack() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                fetchFileTree(history[historyIndex]);
+            }
+        }
+
+        function goForward() {
+            if (selectedFolder) {
+                history = history.slice(0, historyIndex + 1);
+                history.push(currentPath);
+                historyIndex++;
+                fetchFileTree(selectedFolder);
+                selectedFolder = null; // Clear selection after opening
+            }
+        }
+
+        function refresh() {
+            fetchFileTree(currentPath);
+        }
+
+        // Initialize
+        fetchFileTree(currentPath);
+    </script>
+</body>
+</html>

@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f5f5f5;
         }
         .container {
             display: flex;
@@ -16,40 +18,75 @@
             height: 100vh;
         }
         .header {
-            background: #333;
+            background: #4285f4;
             color: white;
-            padding: 10px;
+            padding: 15px;
             text-align: center;
+            font-size: 24px;
+            cursor: pointer;
         }
         .content {
             display: flex;
             flex: 1;
+            overflow: hidden;
         }
         .sidebar {
             width: 250px;
-            background: #f4f4f4;
-            overflow-y: auto;
-            padding: 10px;
+            background: #ffffff;
             border-right: 1px solid #ddd;
-        }
-        .main {
-            flex: 1;
+            display: flex;
+            flex-direction: column;
             padding: 10px;
+        }
+        .sidebar .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .sidebar .buttons button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .sidebar .buttons button:disabled {
+            background: #b0b0b0;
+        }
+        .sidebar .file-tree {
+            flex: 1;
+            overflow-y: auto;
         }
         .file-item {
             cursor: pointer;
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
+            padding: 5px 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .file-item:hover {
+            background: #f0f0f0;
+        }
+        .file-item i {
+            margin-right: 10px;
         }
         .file-item.selected {
             background: #e0e0e0;
         }
-        .file-item:hover {
-            background: #eee;
+        .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
         }
         .preview {
-            margin-top: 20px;
+        margin-top: 20px;
+        text-align: center;
+        position: relative;
+        padding-top: 40px; /* Add padding to make space for the close button */
         }
+
         .preview img {
             max-width: 100%;
             max-height: 400px;
@@ -62,20 +99,62 @@
         .preview pre {
             white-space: pre-wrap;
             word-wrap: break-word;
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .preview .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 30px;
+        }
+        .partition-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f0f0f0;
+        }
+        .partition-selection button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 20px;
+            border: none;
+            background: #4285f4;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>File Explorer</h1>
+        <div class="header" onclick="goHome()">
+            File Explorer
         </div>
-        <div class="content">
+        <div id="partition-selection" class="partition-selection">
+            <h2>Select Partition</h2>
+            <button onclick="selectPartition('C:/')">C Partition</button>
+            <button onclick="selectPartition('D:/')">D Partition</button>
+        </div>
+        <div class="content" style="display: none;">
             <div class="sidebar">
-                <button onclick="goBack()">Back</button>
-                <button onclick="goForward()">Forward</button>
-                <button onclick="refresh()">Refresh</button>
-                <div id="file-tree"></div>
+                <div class="buttons">
+                    <button onclick="goBack()" id="back-button" disabled><i class="fas fa-arrow-left"></i></button>
+                    <button onclick="goForward()"><i class="fas fa-arrow-up"></i></button>
+                    <button onclick="refresh()"><i class="fas fa-sync-alt"></i></button>
+                </div>
+                <div id="file-tree" class="file-tree"></div>
             </div>
             <div class="main">
                 <div id="file-preview" class="preview"></div>
@@ -85,9 +164,18 @@
 
     <script>
         let currentPath = '/';
+        let rootPath = '/';
         let history = [];
         let historyIndex = -1;
         let selectedFolder = null;
+
+        function selectPartition(partition) {
+            document.getElementById('partition-selection').style.display = 'none';
+            document.querySelector('.content').style.display = 'flex';
+            currentPath = partition;
+            rootPath = partition;
+            fetchFileTree(partition);
+        }
 
         function fetchFileTree(path) {
             fetch(`/api/file_explorer/list/?path=${encodeURIComponent(path)}`)
@@ -105,10 +193,22 @@
             fileTree.forEach(file => {
                 const item = document.createElement('div');
                 item.className = 'file-item';
-                item.textContent = file.name;
+                item.innerHTML = `<i class="fas ${getFileIcon(file.extension)}"></i> ${file.name}`;
                 item.onclick = (event) => handleFileClick(event, file);
                 fileTreeContainer.appendChild(item);
             });
+
+            updateNavigationButtons();
+        }
+
+        function getFileIcon(extension) {
+            switch(extension) {
+                case 'folder': return 'fa-folder';
+                case 'txt': return 'fa-file-alt';
+                case 'pdf': return 'fa-file-pdf';
+                case 'image': return 'fa-file-image';
+                default: return 'fa-file';
+            }
         }
 
         function handleFileClick(event, file) {
@@ -126,6 +226,7 @@
                     event.currentTarget.classList.add('selected');
                     selectedFolder = file.path;
                 }
+                clearPreview(); // Clear preview when navigating to a new folder
             } else {
                 previewFile(file.path);
             }
@@ -138,44 +239,54 @@
         }
 
         function previewFile(path) {
-            const filePreview = document.getElementById('file-preview');
-            fetch(`/api/file_explorer/download/?path=${encodeURIComponent(path)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    const fileType = blob.type;
-                    const fileExtension = path.split('.').pop().toLowerCase();
+        const filePreview = document.getElementById('file-preview');
+        fetch(`/api/file_explorer/download/?path=${encodeURIComponent(path)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const fileType = blob.type;
+                const fileExtension = path.split('.').pop().toLowerCase();
 
-                    if (fileType.startsWith('image/')) {
-                        filePreview.innerHTML = `<img src="${url}" alt="Preview">`;
-                    } else if (fileExtension === 'txt') {
-                        // Read .txt file and display content
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            filePreview.innerHTML = `<pre>${event.target.result}</pre>`;
-                        };
-                        reader.readAsText(blob);
-                    } else if (fileExtension === 'pdf') {
-                        // Display PDF file
-                        filePreview.innerHTML = `<iframe src="${url}" type="application/pdf" width="100%" height="600px"></iframe>`;
-                    } else {
-                        filePreview.innerHTML = `<a href="${url}" download>Download File</a>`;
-                    }
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                    const filePreview = document.getElementById('file-preview');
-                    filePreview.innerHTML = '<p>Unable to preview the file.</p>';
-                });
+                let content = '';
+                if (fileType.startsWith('image/')) {
+                    content = `<img src="${url}" alt="Preview">`;
+                } else if (fileExtension === 'txt') {
+                    // Read .txt file and display content
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        filePreview.innerHTML = `<button class="close-btn" onclick="clearPreview()">&times;</button><pre>${event.target.result}</pre>`;
+                    };
+                    reader.readAsText(blob);
+                    return; // Exit to avoid setting default content
+                } else if (fileExtension === 'pdf') {
+                    // Display PDF file
+                    content = `<iframe src="${url}" type="application/pdf"></iframe>`;
+                } else {
+                    content = `<a href="${url}" download>Download File</a>`;
+                }
+                filePreview.innerHTML = `<button class="close-btn" onclick="clearPreview()">&times;</button>${content}`;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                filePreview.innerHTML = '<p>Unable to preview the file.</p>';
+            });
+        }
+
+
+        function clearPreview() {
+            const filePreview = document.getElementById('file-preview');
+            filePreview.innerHTML = '';
         }
 
         function goBack() {
-            if (historyIndex > 0) {
+            if (currentPath === rootPath) {
+                goHome();
+            } else if (historyIndex > 0) {
                 historyIndex--;
                 fetchFileTree(history[historyIndex]);
             }
@@ -195,8 +306,19 @@
             fetchFileTree(currentPath);
         }
 
-        // Initialize
-        fetchFileTree(currentPath);
+        function goHome() {
+            document.getElementById('partition-selection').style.display = 'flex';
+            document.querySelector('.content').style.display = 'none';
+            currentPath = '/';
+            rootPath = '/';
+            history = [];
+            historyIndex = -1;
+        }
+
+        function updateNavigationButtons() {
+            const backButton = document.getElementById('back-button');
+            backButton.disabled = (currentPath === rootPath);
+        }
     </script>
 </body>
 </html>

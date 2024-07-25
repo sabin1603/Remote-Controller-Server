@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Explorer</title>
+    <title>File Explorer & Teams</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -15,84 +15,85 @@
         }
         .container {
             display: flex;
-            flex-direction: column;
             height: 100vh;
-        }
-        .header {
-            background: #1a73e8;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .content {
-            display: flex;
-            flex: 1;
             overflow: hidden;
-            background: #ffffff;
-            border-top: 1px solid #ddd;
         }
         .sidebar {
-            width: 300px;
+            width: 250px;
             background: #f7f9fc;
             border-right: 1px solid #ddd;
             display: flex;
             flex-direction: column;
             padding: 10px;
             box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
         }
         .sidebar .buttons {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px;
+            flex-direction: column;
         }
         .sidebar .buttons button {
             background: #1a73e8;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 15px;
+            margin-bottom: 10px;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 14px;
-        }
-        .sidebar .buttons button:disabled {
-            background: #b0b0b0;
-        }
-        .sidebar .file-tree {
-            flex: 1;
-            overflow-y: auto;
-            padding: 5px;
-        }
-        .file-item {
-            cursor: pointer;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            text-align: left;
             display: flex;
             align-items: center;
-            transition: background 0.3s;
         }
-        .file-item:hover {
-            background: #e9f5fe;
+        .sidebar .buttons button i {
+            margin-right: 10px;
         }
-        .file-item i {
-            margin-right: 15px;
-            font-size: 18px;
+        .header {
+            background: #5864a6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .content {
+            flex: 1;
+            display: none;
+            flex-direction: row;
+        }
+        .file-list-container {
+            width: 300px;
+            background: #ffffff;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .file-item {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
         }
         .file-item.selected {
-            background: #d0e8ff;
+            background: #e0e0e0;
         }
-        .main {
+        .file-item i {
+            margin-right: 10px;
+        }
+        .file-preview {
             flex: 1;
-            padding: 20px;
+            padding: 10px;
+            background: #f5f5f5;
             overflow-y: auto;
-        }
-        .preview {
-            margin-top: 20px;
-            text-align: left;
-            position: relative;
-            padding-top: 40px;
         }
         .preview img {
             max-width: 100%;
@@ -125,7 +126,7 @@
             line-height: 35px;
         }
         .partition-selection {
-            display: flex;
+            display: none; /* Hide by default */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -142,47 +143,164 @@
             cursor: pointer;
             border-radius: 5px;
         }
+        .nav-buttons {
+            background: white;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-buttons button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+        }
+        .nav-buttons button i {
+            margin-right: 5px;
+        }
+        .contacts-list {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .contact-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .contact-item:hover {
+            background-color: #e0e0e0;
+        }
+        .contact-item.selected {
+            background-color: #d0d0d0; /* Lighter background for selected contact */
+            font-weight: bold;
+        }
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+        .contact-item img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        /* New styles for the "Show Contacts" and "Call" buttons */
+        #teams-controls button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+        #teams-controls button i {
+            margin-right: 10px;
+        }
+        #call-button {
+            margin-left: 10px; /* Space between the buttons */
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header" onclick="goHome()">
-            File Explorer
+        <div class="sidebar">
+            <div class="buttons">
+                <button onclick="showFileExplorer()">
+                    <i class="fas fa-folder"></i> File Explorer
+                </button>
+                <button onclick="openTeams()">
+                    <i class="fab fa-microsoft"></i> Microsoft Teams
+                </button>
+            </div>
+        </div>
+        <div id="file-explorer" class="content">
+            <div class="header">File Explorer</div>
+            <div class="nav-buttons">
+                <button onclick="goBack()" id="back-button" disabled><i class="fas fa-arrow-left"></i></button>
+                <button onclick="goForward()"><i class="fas fa-arrow-right"></i></button>
+                <button onclick="refresh()"><i class="fas fa-sync-alt"></i></button>
+            </div>
+            <div class="file-list-container">
+                <div class="file-list" id="file-tree"></div>
+            </div>
+            <div class="file-preview">
+                <div id="file-preview" class="preview"></div>
+            </div>
+        </div>
+        <div id="teams" class="content">
+            <div class="header">Microsoft Teams</div>
+            <div id="teams-controls" class="main">
+                <button onclick="fetchContacts()">
+                    <i class="fas fa-address-book"></i> Show Contacts
+                </button>
+                <button id="call-button" onclick="handleCall()" style="display: none;">
+                    <i class="fas fa-phone"></i> Call
+                </button>
+                <div id="contacts-container" class="contacts-list" style="display: none;"></div>
+            </div>
         </div>
         <div id="partition-selection" class="partition-selection">
             <h2>Select Partition</h2>
             <button onclick="selectPartition('C:/')">C Partition</button>
             <button onclick="selectPartition('D:/')">D Partition</button>
         </div>
-        <div class="content" style="display: none;">
-            <div class="sidebar">
-                <div class="buttons">
-                    <button onclick="goBack()" id="back-button" disabled><i class="fas fa-arrow-left"></i></button>
-                    <button onclick="goForward()"><i class="fas fa-arrow-up"></i></button>
-                    <button onclick="refresh()"><i class="fas fa-sync-alt"></i></button>
-                </div>
-                <div id="file-tree" class="file-tree"></div>
-            </div>
-            <div class="main">
-                <div id="file-preview" class="preview"></div>
-            </div>
-        </div>
     </div>
 
     <script>
-        let currentPath = '/';
-        let rootPath = '/';
-        let history = [];
-        let historyIndex = 0;
-        let selectedFolder = null;
+        let selectedContactId = null; // To store the selected contact ID
+
+        function openTeams() {
+            showContacts();
+            fetch('/api/teams/open/', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('file-explorer').style.display = 'none';
+                    document.getElementById('teams').style.display = 'flex';
+                    document.getElementById('partition-selection').style.display = 'none';
+                } else {
+                    alert('Error opening Microsoft Teams');
+                }
+            })
+            .catch(error => {
+                console.error('Error opening Microsoft Teams:', error);
+                alert('Error opening Microsoft Teams');
+            });
+        }
+
+        function showFileExplorer() {
+            document.getElementById('file-explorer').style.display = 'none';
+            document.getElementById('teams').style.display = 'none';
+            document.getElementById('partition-selection').style.display = 'flex';
+        }
 
         function selectPartition(partition) {
             document.getElementById('partition-selection').style.display = 'none';
-            document.querySelector('.content').style.display = 'flex';
+            document.getElementById('file-explorer').style.display = 'flex';
             currentPath = partition;
             rootPath = partition;
-            history = [partition]; // Initialize history with the selected partition
-            historyIndex = 0; // Reset history index
+            history = [partition];
+            historyIndex = 0;
             fetchFileTree(partition);
         }
 
@@ -222,7 +340,8 @@
 
         function handleFileClick(event, file) {
             event.preventDefault();
-
+            clearSelection();
+            event.currentTarget.classList.add('selected');
             if (file.extension === 'folder') {
                 if (event.detail === 2) {
                     history = history.slice(0, historyIndex + 1);
@@ -231,8 +350,6 @@
                     fetchFileTree(file.path);
                     selectedFolder = null;
                 } else {
-                    clearSelection();
-                    event.currentTarget.classList.add('selected');
                     selectedFolder = file.path;
                 }
                 clearPreview();
@@ -289,10 +406,9 @@
                 historyIndex--;
                 fetchFileTree(history[historyIndex]);
             } else {
-                    goHome();
+                goHome();
             }
         }
-
 
         function goForward() {
             if (selectedFolder) {
@@ -304,18 +420,15 @@
             }
         }
 
-
         function refresh() {
             fetchFileTree(currentPath);
         }
 
         function goHome() {
+            document.getElementById('file-explorer').style.display = 'none';
+            document.getElementById('teams').style.display = 'none';
             document.getElementById('partition-selection').style.display = 'flex';
-            document.querySelector('.content').style.display = 'none';
-            currentPath = '/';
-            rootPath = '/';
-            history = [];
-            historyIndex = -1;
+            clearPreview();
         }
 
         function updateNavigationButtons() {
@@ -323,6 +436,82 @@
             backButton.disabled = (historyIndex <= 0);
         }
 
+        function showContacts() {
+            document.getElementById('file-explorer').style.display = 'none';
+            document.getElementById('teams').style.display = 'flex';
+            document.getElementById('partition-selection').style.display = 'none';
+        }
+
+        function fetchContacts() {
+            fetch('/api/teams/contacts/')
+                .then(response => response.json())
+                .then(data => {
+                    displayContacts(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching contacts:', error);
+                    document.getElementById('contacts-container').innerHTML = '<p>Error loading contacts.</p>';
+                });
+        }
+
+        function displayContacts(contacts) {
+            const container = document.getElementById('contacts-container');
+            container.innerHTML = '';
+
+            if (!contacts.length) {
+                container.innerHTML = '<p>No contacts found.</p>';
+                return;
+            }
+
+            contacts.forEach(contact => {
+                const item = document.createElement('div');
+                item.className = 'contact-item';
+                item.innerHTML = `
+                    <img src="${contact.photoUrl || 'https://via.placeholder.com/40'}" alt="${contact.displayName}">
+                    <span>${contact.displayName}</span>
+                `;
+                item.onclick = () => handleContactClick(contact);
+                container.appendChild(item);
+            });
+
+            container.style.display = 'block';
+        }
+
+        function handleContactClick(contact) {
+            // Clear the previously selected contact
+            const contactItems = document.querySelectorAll('.contact-item');
+            contactItems.forEach(item => item.classList.remove('selected'));
+
+            // Select the new contact
+            const selectedItem = Array.from(contactItems).find(item => item.textContent.includes(contact.displayName));
+            if (selectedItem) {
+                selectedItem.classList.add('selected');
+            }
+
+            selectedContactId = contact.id;
+            document.getElementById('call-button').style.display = 'flex'; // Show the call button
+        }
+        function handleCall() {
+            if (selectedContactId) {
+                fetch(`/api/teams/call/${selectedContactId}/`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Calling ' + selectedContactId);
+                    } else {
+                        alert('Error initiating call');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error initiating call:', error);
+                    alert('Error initiating call');
+                });
+            } else {
+                alert('No contact selected');
+            }
+        }
     </script>
 </body>
 </html>

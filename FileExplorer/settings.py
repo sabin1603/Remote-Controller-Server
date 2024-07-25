@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp',
     'file_explorer',
+    'teams_controller',
 ]
 
 MIDDLEWARE = [

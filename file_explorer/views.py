@@ -21,15 +21,10 @@ def list_files(request):
                 'path': path,
                 'extension': os.path.splitext(name)[1] if os.path.isfile(path) else 'folder'
             })
-        break  # Only read the top level
+        break
 
     return JsonResponse(file_tree, safe=False)
 
-
-import os
-import subprocess
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
 
 @require_POST
 @csrf_exempt

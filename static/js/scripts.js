@@ -4,25 +4,44 @@ let history = [];
 let historyIndex = -1;
 let selectedFolder = null;
 
+function openPowerpoint() {
+    alert('openPowerpoint function called');  // Debug alert
+    fetch('/api/powerpoint/open/', {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === "Microsoft PowerPoint opened successfully.") {
+            alert('Microsoft PowerPoint opened successfully.');
+        } else {
+            alert('Error opening Microsoft PowerPoint');
+        }
+    })
+    .catch(error => {
+        console.error('Error opening Microsoft PowerPoint:', error);
+        alert('Error opening Microsoft PowerPoint');
+    });
+}
+
 function openTeams() {
     showContacts();
     fetch('/api/teams/open/', {
         method: 'GET'
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById('file-explorer').style.display = 'none';
-            document.getElementById('teams').style.display = 'flex';
-            document.getElementById('partition-selection').style.display = 'none';
-        } else {
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('file-explorer').style.display = 'none';
+                document.getElementById('teams').style.display = 'flex';
+                document.getElementById('partition-selection').style.display = 'none';
+            } else {
+                alert('Error opening Microsoft Teams');
+            }
+        })
+        .catch(error => {
+            console.error('Error opening Microsoft Teams:', error);
             alert('Error opening Microsoft Teams');
-        }
-    })
-    .catch(error => {
-        console.error('Error opening Microsoft Teams:', error);
-        alert('Error opening Microsoft Teams');
-    });
+        });
 }
 
 function showFileExplorer() {

@@ -50,6 +50,27 @@
                 <div id="contacts-container" class="contacts-list" style="display: none;"></div>
             </div>
         </div>
+        <div id="powerpoint" class="content">
+            <div class="header">Microsoft PowerPoint</div>
+            <div id="presentation-list-container" class="main" style="display: none;">
+                <h3>Select a Presentation</h3>
+                <ul id="presentation-list"></ul>
+            </div>
+            <div id="powerpoint-controls" class="main" style="display: none;">
+                <button onclick="prevSlide()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button onclick="nextSlide()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button onclick="startPresentation()">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button onclick="endPresentation()">
+                    <i class="fa-solid fa-square"></i>
+                </button>
+            </div>
+        </div>
         <div id="partition-selection" class="partition-selection">
             <h2>Select Partition</h2>
             <button onclick="selectPartition('C:/')">C Partition</button>

@@ -41,7 +41,7 @@ body {
     margin-right: 10px;
 }
 .header {
-    background: #5864a6;
+    background: #737373;
     color: white;
     padding: 20px;
     text-align: center;
@@ -207,4 +207,21 @@ body {
 }
 #call-button {
     margin-left: 10px;
+}
+
+#powerpoint-controls button {
+    background: #ed6c47;
+    color: white;
+    border: none;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+#powerpoint-controls button i {
+    margin-right: 10px;
 }

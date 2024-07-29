@@ -5,15 +5,12 @@ let historyIndex = -1;
 let selectedFolder = null;
 
 function openPowerpoint() {
-    alert('openPowerpoint function called');  // Debug alert
     fetch('/api/powerpoint/open/', {
         method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message === "Microsoft PowerPoint opened successfully.") {
-            alert('Microsoft PowerPoint opened successfully.');
-        } else {
+        if (data.message !== "Microsoft PowerPoint opened successfully.") {
             alert('Error opening Microsoft PowerPoint');
         }
     })

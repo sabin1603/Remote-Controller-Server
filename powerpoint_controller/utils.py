@@ -1,5 +1,4 @@
 import os
-import glob
 
 def find_pptx_files(root_dir):
     """

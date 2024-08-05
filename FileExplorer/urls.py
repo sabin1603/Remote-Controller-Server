@@ -7,4 +7,5 @@ urlpatterns = [
     path('api/teams/', include('teams_controller.urls')),
     path('api/powerpoint/', include('powerpoint_controller.urls')),
     path('api/excel/', include('excel_controller.urls')),
+    path('api/word/', include('word_controller.urls')),
 ]

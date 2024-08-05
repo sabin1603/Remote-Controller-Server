@@ -25,6 +25,9 @@
                 <button onclick="openExcel()">
                     <i class="fa-solid fa-file-excel"></i> Microsoft Excel
                 </button>
+                <button onclick="openWord()">
+                    <i class="fa-solid fa-file-word"></i> Microsoft Word
+                </button>
             </div>
         </div>
         <div id="file-explorer" class="content">
@@ -106,6 +109,36 @@
                     <i class="fa-solid fa-magnifying-glass-minus"></i>
                 </button>
                 <button onclick="closeWorkbook()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+         <div id="word" class="content">
+            <div class="header">Microsoft Word</div>
+            <div id="document-list-container" class="main" style="display: none;">
+                <h3>Select a document</h3>
+                <ul id="document-list"></ul>
+            </div>
+            <div id="word-controls" class="main" style="display: none;">
+                <button onclick="scrollUpWord()">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+                <button onclick="scrollDownWord()">
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+                <button onclick="zoomInWord()">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </button>
+                <button onclick="zoomOutWord()">
+                    <i class="fa-solid fa-magnifying-glass-minus"></i>
+                </button>
+                <button onclick="enableReadMode()">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+                <button onclick="disableReadMode()">
+                    <i class="fa-solid fa-eye-slash"></i>
+                </button>
+                <button onclick="closeDocument()">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>

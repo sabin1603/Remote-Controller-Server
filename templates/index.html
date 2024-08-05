@@ -22,6 +22,9 @@
                 <button onclick="openPowerpoint()">
                     <i class="fas fa-file-powerpoint"></i> Microsoft PowerPoint
                 </button>
+                <button onclick="openExcel()">
+                    <i class="fa-solid fa-file-excel"></i> Microsoft Excel
+                </button>
             </div>
         </div>
         <div id="file-explorer" class="content">
@@ -68,6 +71,39 @@
                 </button>
                 <button onclick="endPresentation()">
                     <i class="fa-solid fa-square"></i>
+                </button>
+            </div>
+        </div>
+        <div id="excel" class="content">
+            <div class="header">Microsoft Excel</div>
+            <div id="workbook-list-container" class="main" style="display: none;">
+                <h3>Select a Workbook</h3>
+                <ul id="workbook-list"></ul>
+            </div>
+            <div id="excel-controls" class="main" style="display: none;">
+                <button onclick="scrollLeft()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button onclick="scrollRight()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button onclick="scrollUp()">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+                <button onclick="scrollDown()">
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+                <button onclick="nextWorksheet()">
+                   <i class="fa-solid fa-angles-right"></i>
+                </button>
+                <button onclick="previousWorksheet()">
+                    <i class="fa-solid fa-angles-left"></i>
+                </button>
+                <button onclick="zoomIn()">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </button>
+                <button onclick="zoomOut()">
+                    <i class="fa-solid fa-magnifying-glass-minus"></i>
                 </button>
             </div>
         </div>

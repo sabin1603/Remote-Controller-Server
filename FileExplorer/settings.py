@@ -17,6 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ROOT_DIR = 'C:\\Users\\Sabin\\OneDrive - Universitatea Babeş-Bolyai'
 
+ROOT_EXCEL_DIR = 'C:\\Users\Sabin\\Documents'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -27,7 +29,6 @@ SECRET_KEY = 'django-insecure-w@+#pu*#ss+qujrafhq1l+yhpd6w+4bi*!%-!*rn_#ki1&jy86
 DEBUG = True
 
 ALLOWED_HOSTS = ["192.168.0.157", "127.0.0.1"]
-
 
 # Application definition
 
@@ -76,16 +77,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'FileExplorer.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #       'ENGINE': 'django.db.backends.sqlite3',
 #       'NAME': BASE_DIR / 'db.sqlite3',
 #   }
-#}
+# }
 
 
 # Password validation
@@ -106,7 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -117,7 +116,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -136,7 +134,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.0.242:8000",
     "http://192.168.0.199:8000",
 ]
-
 
 # To allow any origin (not recommended for production):
 # CORS_ALLOW_ALL_ORIGINS = True

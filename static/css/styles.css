@@ -225,3 +225,20 @@ body {
 #powerpoint-controls button i {
     margin-right: 10px;
 }
+
+excel-controls button {
+    background: #1d6f42;
+    color: white;
+    border: none;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+#excel-controls button i {
+    margin-right: 10px;
+}

@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = 'C:\\Users\\Sabin\\OneDrive - Universitatea Babeş-Bolyai'
 
 ROOT_EXCEL_DIR = 'C:\\Users\Sabin\\Documents'
+ROOT_WORD_DIR = 'C:\\Users\Sabin\\Documents'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -28,7 +29,7 @@ SECRET_KEY = 'django-insecure-w@+#pu*#ss+qujrafhq1l+yhpd6w+4bi*!%-!*rn_#ki1&jy86
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.0.157", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.0.157", "127.0.0.1", "172.20.10.6"]
 
 # Application definition
 
@@ -133,6 +134,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://192.168.0.242:8000",
     "http://192.168.0.199:8000",
+    "http://192.168.56.1:8000",
+    "http://172.20.10.7:8000",
+    "http://172.20.10.6:8000"
 ]
 
 # To allow any origin (not recommended for production):

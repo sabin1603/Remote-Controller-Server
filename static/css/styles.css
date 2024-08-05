@@ -226,7 +226,7 @@ body {
     margin-right: 10px;
 }
 
-excel-controls button {
+#excel-controls button {
     background: #1d6f42;
     color: white;
     border: none;

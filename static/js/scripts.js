@@ -5,6 +5,7 @@ let historyIndex = -1;
 let selectedFolder = null;
 let currentPresentation = null;
 let currentWorkbook = null;
+let selectedFilePath = null;
 
 function openExcel() {
     hideAllModules();
@@ -456,6 +457,8 @@ function getFileIcon(extension) {
 function handleFileClick(event, file) {
     clearSelection();
     event.currentTarget.classList.add('selected');
+    selectedFilePath = file.path;
+
     if (file.extension === 'folder') {
         selectedFolder = file.path;
     } else {

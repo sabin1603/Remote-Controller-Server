@@ -93,17 +93,20 @@
                 <button onclick="scrollDown()">
                     <i class="fas fa-arrow-down"></i>
                 </button>
-                <button onclick="nextWorksheet()">
-                   <i class="fa-solid fa-angles-right"></i>
-                </button>
                 <button onclick="previousWorksheet()">
                     <i class="fa-solid fa-angles-left"></i>
+                </button>
+                <button onclick="nextWorksheet()">
+                   <i class="fa-solid fa-angles-right"></i>
                 </button>
                 <button onclick="zoomIn()">
                     <i class="fa-solid fa-magnifying-glass-plus"></i>
                 </button>
                 <button onclick="zoomOut()">
                     <i class="fa-solid fa-magnifying-glass-minus"></i>
+                </button>
+                <button onclick="closeWorkbook()">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
         </div>
@@ -115,5 +118,6 @@
     </div>
 
     <script src="{% static 'js/scripts.js' %}"></script>
+
 </body>
 </html>

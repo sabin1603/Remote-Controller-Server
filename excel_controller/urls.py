@@ -12,4 +12,5 @@ urlpatterns = [
     path('scroll_down/', views.scroll_down, name='scroll_down'),
     path('scroll_left/', views.scroll_left, name='scroll_left'),
     path('scroll_right/', views.scroll_right, name='scroll_right'),
+    path('close/', views.close_workbook, name='close_workbook'),
 ]

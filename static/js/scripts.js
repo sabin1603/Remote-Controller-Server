@@ -180,6 +180,7 @@ function scrollDown() {
 }
 
 function scrollLeft() {
+    console.log('Scroll left button clicked');  // Debug log
     if (!currentWorkbook) {
         alert('No workbook selected.');
         return;
@@ -198,6 +199,7 @@ function scrollLeft() {
             alert('Error scrolling left');
         });
 }
+
 
 function scrollRight() {
     if (!currentWorkbook) {
@@ -218,6 +220,30 @@ function scrollRight() {
             alert('Error scrolling right');
         });
 }
+
+function closeWorkbook(){
+    if (!currentWorkbook) {
+        alert('No workbook open.');
+        return;
+    }
+    fetch('/api/excel/close/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message.includes('Workbook closed successfully.')) {
+                currentWorkbook = null;
+                document.querySelectorAll('.file-item').forEach(item => item.classList.remove('selected'));
+                document.getElementById('workbook-list-container').style.display = 'block';
+                document.getElementById('excel-controls').style.display = 'none';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error closing workbook:', error);
+            alert('Error closing workbook');
+        });
+}
+
 
 function openPowerpoint() {
     hideAllModules();

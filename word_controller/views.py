@@ -83,7 +83,7 @@ def scroll_up(request):
     if not document:
         return JsonResponse({"message": "No document loaded"}, status=400)
     try:
-        word_app.Selection.MoveUp()
+        word_app.ActiveWindow.Scroll(-1, 0)  # Scroll up (negative value for up)
         return JsonResponse({"message": "Scrolled up."})
     except Exception as e:
         return JsonResponse({"message": f"Error scrolling up: {e}"}, status=500)
@@ -94,11 +94,11 @@ def scroll_down(request):
     if not document:
         return JsonResponse({"message": "No document loaded"}, status=400)
     try:
-        word_app.Selection.MoveDown()
+        word_app.ActiveWindow.Scroll(1, 0)  # Scroll down (positive value for down)
         return JsonResponse({"message": "Scrolled down."})
     except Exception as e:
         return JsonResponse({"message": f"Error scrolling down: {e}"}, status=500)
-
+    
 @require_GET
 def zoom_in(request):
     global document
@@ -142,3 +142,25 @@ def disable_read_mode(request):
         return JsonResponse({"message": "Read mode disabled."})
     except Exception as e:
         return JsonResponse({"message": f"Error disabling read mode: {e}"}, status=500)
+
+@require_GET
+def next_page(request):
+    global document
+    if not document:
+        return JsonResponse({"message": "No document loaded"}, status=400)
+    try:
+        word_app.ActiveWindow.View.NextPage()
+        return JsonResponse({"message": "Moved to next page."})
+    except Exception as e:
+        return JsonResponse({"message": f"Error moving to next page: {e}"}, status=500)
+
+@require_GET
+def previous_page(request):
+    global document
+    if not document:
+        return JsonResponse({"message": "No document loaded"}, status=400)
+    try:
+        word_app.ActiveWindow.View.PreviousPage()
+        return JsonResponse({"message": "Moved to previous page."})
+    except Exception as e:
+        return JsonResponse({"message": f"Error moving to previous page: {e}"}, status=500)

@@ -11,6 +11,4 @@ urlpatterns = [
     path('zoom_out/', views.zoom_out, name='zoom_out'),
     path('enable_read_mode/', views.enable_read_mode, name='enable_read_mode'),
     path('disable_read_mode/', views.disable_read_mode, name='disable_read_mode'),
-    path('next_page/', views.next_page, name='next_page'),
-    path('previous_page/', views.previous_page, name='previous_page'),
 ]

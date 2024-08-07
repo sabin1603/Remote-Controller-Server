@@ -181,48 +181,6 @@ function disableReadMode() {
         });
 }
 
-// Function to move to the next page in the Word document
-function nextPage() {
-    if (!currentDocument) {
-        alert('No document selected.');
-        return;
-    }
-    fetch('/api/word/next_page/', { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Moved to next page')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error moving to next page:', error);
-            alert('Error moving to next page');
-        });
-}
-
-// Function to move to the previous page in the Word document
-function previousPage() {
-    if (!currentDocument) {
-        alert('No document selected.');
-        return;
-    }
-    fetch('/api/word/previous_page/', { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Moved to previous page')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error moving to previous page:', error);
-            alert('Error moving to previous page');
-        });
-}
-
 // Function to close the Word document
 function closeDocument() {
     if (!currentDocument) {

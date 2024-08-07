@@ -83,7 +83,10 @@ def scroll_up(request):
     if not document:
         return JsonResponse({"message": "No document loaded"}, status=400)
     try:
-        word_app.ActiveWindow.SmallScroll(Down=-1)  # Scroll up
+        if word_app.ActiveWindow.View.ReadingLayout:
+            word_app.ActiveWindow.LargeScroll(Down=-1)  # Scroll up in Reading Layout mode
+        else:
+            word_app.ActiveWindow.SmallScroll(Down=-1)  # Scroll up in other modes
         return JsonResponse({"message": "Scrolled up."})
     except Exception as e:
         return JsonResponse({"message": f"Error scrolling up: {e}"}, status=500)
@@ -94,7 +97,10 @@ def scroll_down(request):
     if not document:
         return JsonResponse({"message": "No document loaded"}, status=400)
     try:
-        word_app.ActiveWindow.SmallScroll(Down=1)  # Scroll down
+        if word_app.ActiveWindow.View.ReadingLayout:
+            word_app.ActiveWindow.LargeScroll(Down=1)  # Scroll down in Reading Layout mode
+        else:
+            word_app.ActiveWindow.SmallScroll(Down=1)  # Scroll down in other modes
         return JsonResponse({"message": "Scrolled down."})
     except Exception as e:
         return JsonResponse({"message": f"Error scrolling down: {e}"}, status=500)

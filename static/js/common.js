@@ -5,5 +5,6 @@ function hideAllModules() {
     document.getElementById('partition-selection').style.display = 'none';
     document.getElementById('excel').style.display = 'none';
     document.getElementById('word').style.display = 'none';
+    document.getElementById('pdf-reader').style.display = 'none';
 
 }

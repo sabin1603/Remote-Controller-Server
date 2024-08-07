@@ -259,3 +259,21 @@ body {
 #word-controls button i {
     margin-right: 10px;
 }
+
+#pdf-reader-controls button {
+    background: #f40f02;
+    color: white;
+    border: none;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+#pdf-reader-controls button i {
+    margin-right: 10px;
+}
+

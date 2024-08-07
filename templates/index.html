@@ -28,6 +28,9 @@
                 <button onclick="openWord()">
                     <i class="fa-solid fa-file-word"></i> Microsoft Word
                 </button>
+                <button onclick="openPdfReader()">
+                    <i class="fa-solid fa-file-pdf"></i> PDF Reader
+                </button>
             </div>
         </div>
         <div id="file-explorer" class="content">
@@ -140,6 +143,42 @@
                 </button>
                 <button onclick="closeDocument()">
                     <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div id="pdf-reader" class="content">
+            <div class="header">PDF Reader</div>
+            <div id="pdf-list-container" class="main" style="display: none;">
+                <h3>Select a pdf</h3>
+                <ul id="pdf-list"></ul>
+            </div>
+            <div id="pdf-reader-controls" class="main" style="display: none;">
+                <button onclick="scrollUpPdf()">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+                <button onclick="scrollDownPdf()">
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+                <button onclick="zoomInPdf()">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </button>
+                <button onclick="zoomOutPdf()">
+                    <i class="fa-solid fa-magnifying-glass-minus"></i>
+                </button>
+                <button onclick="enableReadModePdf()">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+                <button onclick="disableReadModePdf()">
+                    <i class="fa-solid fa-eye-slash"></i>
+                </button>
+                <button onclick="closePdf()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <button onclick="savePdf()">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+                <button onclick="printPdf()">
+                    <i class="fa-solid fa-print"></i>
                 </button>
             </div>
         </div>

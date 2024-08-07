@@ -31,6 +31,9 @@
                 <button onclick="openPdfReader()">
                     <i class="fa-solid fa-file-pdf"></i> PDF Reader
                 </button>
+                <button onclick="openChrome()">
+                    <i class="fa-brands fa-chrome"></i> Chrome
+                </button>
             </div>
         </div>
         <div id="file-explorer" class="content">
@@ -182,6 +185,23 @@
                 </button>
             </div>
         </div>
+        <div id="chrome" class="content">
+            <div class="header">Google Chrome</div>
+            <div id="chrome-controls" class="main" style="display: none;">
+                <button onclick="goHome()">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button onclick="goForward()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button onclick="closeChrome()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
         <div id="partition-selection" class="partition-selection">
             <h2>Select Partition</h2>
             <button onclick="selectPartition('C:/')">C Partition</button>
@@ -196,6 +216,7 @@
     <script src="{% static 'js/teams.js' %}"></script>
     <script src="{% static 'js/word.js' %}"></script>
     <script src="{% static 'js/pdf-reader.js' %}"></script>
+    <script src="{% static 'js/chrome.js' %}"></script>
 
 </body>
 </html>

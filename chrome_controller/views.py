@@ -111,20 +111,50 @@ def scroll_down(request):
     except Exception as e:
         return JsonResponse({"message": f"Error scrolling down: {e}"}, status=500)
 
+
 @csrf_exempt
 @require_POST
 def go_to_left_tab(request):
     try:
-        driver.switch_to.window(driver.window_handles[0])  # Go to the previous tab
+        # Get the current window handle
+        current_handle = driver.current_window_handle
+
+        # Get the list of all window handles
+        window_handles = driver.window_handles
+
+        # Find the index of the current window handle
+        current_index = window_handles.index(current_handle)
+
+        # Determine the index of the left tab
+        left_index = (current_index - 1) % len(window_handles)
+
+        # Switch to the left tab
+        driver.switch_to.window(window_handles[left_index])
+
         return JsonResponse({"message": "Navigated to left tab"})
     except Exception as e:
         return JsonResponse({"message": f"Error navigating to left tab: {e}"}, status=500)
+
 
 @csrf_exempt
 @require_POST
 def go_to_right_tab(request):
     try:
-        driver.switch_to.window(driver.window_handles[-1])  # Go to the next tab
+        # Get the current window handle
+        current_handle = driver.current_window_handle
+
+        # Get the list of all window handles
+        window_handles = driver.window_handles
+
+        # Find the index of the current window handle
+        current_index = window_handles.index(current_handle)
+
+        # Determine the index of the right tab
+        right_index = (current_index + 1) % len(window_handles)
+
+        # Switch to the right tab
+        driver.switch_to.window(window_handles[right_index])
+
         return JsonResponse({"message": "Navigated to right tab"})
     except Exception as e:
         return JsonResponse({"message": f"Error navigating to right tab: {e}"}, status=500)

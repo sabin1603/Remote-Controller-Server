@@ -26,11 +26,11 @@ function goHome() {
     fetch('/api/chrome/go_home/', { method: 'POST' });
 }
 
-function goBack() {
+function goBackChrome() {
     fetch('/api/chrome/go_back/', { method: 'POST' });
 }
 
-function goForward() {
+function goForwardChrome() {
     fetch('/api/chrome/go_forward/', { method: 'POST' });
 }
 
@@ -54,11 +54,11 @@ function closeChrome() {
     fetch('/api/chrome/close_chrome/', { method: 'POST' });
 }
 
-function zoomIn() {
+function zoomInChrome() {
     fetch('/api/chrome/zoom_in/', { method: 'POST' });
 }
 
-function zoomOut() {
+function zoomOutChrome() {
     fetch('/api/chrome/zoom_out/', { method: 'POST' });
 }
 
@@ -70,17 +70,33 @@ function scrollDownChrome() {
     fetch('/api/chrome/scroll_down/', { method: 'POST' });
 }
 
+// Existing toggleNavigationMode function updated
 function toggleNavigationMode() {
+    enterNavigationMode();
     let navModeContainer = document.getElementById('navigation-mode');
     let chromeControls = document.getElementById('chrome-controls');
+    let closeNavButton = document.getElementById('close-navigation-mode');
 
     if (navModeContainer.style.display === 'none') {
         navModeContainer.style.display = 'flex';
         chromeControls.style.display = 'none';
+        closeNavButton.style.display = 'block';
     } else {
         navModeContainer.style.display = 'none';
         chromeControls.style.display = 'flex';
+        closeNavButton.style.display = 'none';
     }
+}
+
+// New function to specifically close navigation mode
+function closeNavigationMode() {
+    let navModeContainer = document.getElementById('navigation-mode');
+    let chromeControls = document.getElementById('chrome-controls');
+    let closeNavButton = document.getElementById('close-navigation-mode');
+
+    navModeContainer.style.display = 'none';
+    chromeControls.style.display = 'flex';
+    closeNavButton.style.display = 'none';
 }
 
 // Navigation mode functions
@@ -99,4 +115,19 @@ function navigateUp() {
 
 function navigateDown() {
     fetch('/api/chrome/navigate_down/', { method: 'POST' });
+}
+
+function clickLink(){
+    fetch('/api/chrome/click/', { method: 'POST'});
+}
+
+function search(){
+    let query = document.getElementById('search-box').value;
+    fetch('/api/chrome/search/', {
+        method: 'POST',
+        body: JSON.stringify({ query: query }),
+        headers: { 'Content-Type': 'application/json' }
+    }).then(response => response.json())
+      .then(data => console.log(data.message))
+      .catch(error => console.error('Error during search:', error));
 }

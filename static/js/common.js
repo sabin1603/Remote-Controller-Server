@@ -6,5 +6,6 @@ function hideAllModules() {
     document.getElementById('excel').style.display = 'none';
     document.getElementById('word').style.display = 'none';
     document.getElementById('pdf-reader').style.display = 'none';
+    document.getElementById('chrome').style.display = 'none';
 
 }

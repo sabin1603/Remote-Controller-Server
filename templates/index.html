@@ -206,10 +206,10 @@
                 <button onclick="goHome()">
                     <i class="fas fa-home"></i>
                 </button>
-                <button onclick="goBack()">
+                <button onclick="goBackChrome()">
                     <i class="fas fa-arrow-left"></i>
                 </button>
-                <button onclick="goForward()">
+                <button onclick="goForwardChrome()">
                     <i class="fas fa-arrow-right"></i>
                 </button>
                 <button onclick="newTab()">
@@ -227,10 +227,10 @@
                 <button onclick="closeChrome()">
                     <i class="fas fa-times-circle"></i>
                 </button>
-                <button onclick="zoomIn()">
+                <button onclick="zoomInChrome()">
                     <i class="fas fa-search-plus"></i>
                 </button>
-                <button onclick="zoomOut()">
+                <button onclick="zoomOutChrome()">
                     <i class="fas fa-search-minus"></i>
                 </button>
                 <button onclick="scrollUpChrome()">
@@ -245,12 +245,16 @@
             </div>
             <div id="navigation-mode" class="navigation-mode" style="display: none;">
                 <input type="text" id="search-box" placeholder="Type URL or query">
-                <button onclick="enterNavigationMode()">Enter</button>
+                <button onclick="search()">Search</button>
                 <button onclick="navigateUp()">
                     <i class="fas fa-arrow-up"></i>
                 </button>
                 <button onclick="navigateDown()">
                     <i class="fas fa-arrow-down"></i>
+                </button>
+                <button onclick="clickLink()">Access Link</button>
+                <button id="close-navigation-mode" onclick="closeNavigationMode()" style="display: none;">
+                    <i class="fas fa-times"></i> Close Navigation Mode
                 </button>
             </div>
         </div>

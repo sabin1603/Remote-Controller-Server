@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
@@ -8,10 +10,13 @@ from selenium.webdriver.chrome.options import Options
 import os
 
 # Setup Selenium WebDriver
-chrome_service = Service('D:\ChromeDriver\chromedriver-win64\chromedriver.exe')  # Specify the path to your ChromeDriver
+chrome_service = Service('D:\\ChromeDriver\\chromedriver-win64\\chromedriver.exe')  # Specify the path to your ChromeDriver
 chrome_options = Options()
-#chrome_options.add_argument("--remote-debugging-port=9222")  # Optional: for debugging
+chrome_options.add_argument("--remote-debugging-port=9222")  # Optional: for debugging
 driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+
+# Global variable to keep track of the current link index
+current_link_index = -1
 
 @require_GET
 def open_chrome(request):
@@ -35,6 +40,8 @@ def new_tab(request):
 @require_POST
 def go_home(request):
     try:
+        global current_link_index
+        current_link_index = -1
         driver.get('http://www.google.com')  # Navigate to the home page
         return JsonResponse({"message": "Navigated to home"})
     except Exception as e:
@@ -108,7 +115,7 @@ def scroll_down(request):
 @require_POST
 def go_to_left_tab(request):
     try:
-        driver.execute_script("window.history.go(-1)")  # Go to the previous tab
+        driver.switch_to.window(driver.window_handles[0])  # Go to the previous tab
         return JsonResponse({"message": "Navigated to left tab"})
     except Exception as e:
         return JsonResponse({"message": f"Error navigating to left tab: {e}"}, status=500)
@@ -117,7 +124,7 @@ def go_to_left_tab(request):
 @require_POST
 def go_to_right_tab(request):
     try:
-        driver.execute_script("window.history.go(1)")  # Go to the next tab
+        driver.switch_to.window(driver.window_handles[-1])  # Go to the next tab
         return JsonResponse({"message": "Navigated to right tab"})
     except Exception as e:
         return JsonResponse({"message": f"Error navigating to right tab: {e}"}, status=500)
@@ -146,8 +153,14 @@ def navigate(request):
 @require_POST
 def navigate_up(request):
     try:
-        driver.execute_script("window.scrollBy(0, -100)")  # Scroll up
-        return JsonResponse({"message": "Navigated up"})
+        global current_link_index
+        links = driver.find_elements(By.CSS_SELECTOR, 'a')  # Adjust the selector as needed for Google search results
+        if links:
+            current_link_index = max(0, current_link_index - 1)
+            for i, link in enumerate(links):
+                driver.execute_script("arguments[0].style.border=''", link)  # Remove highlight
+            driver.execute_script("arguments[0].style.border='2px solid red'", links[current_link_index])  # Highlight the selected link
+        return JsonResponse({"message": "Navigated up", "current_index": current_link_index})
     except Exception as e:
         return JsonResponse({"message": f"Error navigating up: {e}"}, status=500)
 
@@ -155,7 +168,43 @@ def navigate_up(request):
 @require_POST
 def navigate_down(request):
     try:
-        driver.execute_script("window.scrollBy(0, 100)")  # Scroll down
-        return JsonResponse({"message": "Navigated down"})
+        global current_link_index
+        links = driver.find_elements(By.CSS_SELECTOR, 'a')  # Adjust the selector as needed for Google search results
+        if links:
+            current_link_index = min(len(links) - 1, current_link_index + 1)
+            for i, link in enumerate(links):
+                driver.execute_script("arguments[0].style.border=''", link)  # Remove highlight
+            driver.execute_script("arguments[0].style.border='2px solid red'", links[current_link_index])  # Highlight the selected link
+        return JsonResponse({"message": "Navigated down", "current_index": current_link_index})
     except Exception as e:
         return JsonResponse({"message": f"Error navigating down: {e}"}, status=500)
+
+@csrf_exempt
+@require_POST
+def click_link(request):
+    try:
+        global current_link_index
+        links = driver.find_elements(By.CSS_SELECTOR, 'a')  # Adjust the selector as needed for Google search results
+        if links and current_link_index != -1:
+            selected_link = links[current_link_index]
+            selected_link.click()
+            return JsonResponse({"message": "Link clicked"})
+        else:
+            return JsonResponse({"message": "No link selected or no links found", "current_index": current_link_index}, status=400)
+    except Exception as e:
+        return JsonResponse({"message": f"Error clicking link: {e}"}, status=500)
+
+@csrf_exempt
+@require_POST
+def search(request):
+    try:
+        data = json.loads(request.body)
+        query = data.get('query')
+        if query:
+            search_url = f"https://www.google.com/search?q={query}"
+            driver.get(search_url)
+            return JsonResponse({"message": "Search successful"})
+        else:
+            return JsonResponse({"message": "No query provided"}, status=400)
+    except Exception as e:
+        return JsonResponse({"message": f"Error during search: {e}"}, status=500)

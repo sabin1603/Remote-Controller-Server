@@ -19,4 +19,6 @@ urlpatterns = [
     path('navigate/', views.navigate, name='navigate'),
     path('navigate_up/', views.navigate_up, name='navigate_up'),
     path('navigate_down/', views.navigate_down, name='navigate_down'),
+    path('click/', views.click_link, name='click_link'),
+    path('search/', views.search, name='search'),
 ]

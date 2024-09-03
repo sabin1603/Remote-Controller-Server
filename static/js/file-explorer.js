@@ -85,20 +85,25 @@ function handleFileDoubleClick(event, file) {
 function openFile(filePath) {
     const fileExtension = filePath.split('.').pop().toLowerCase();
     let apiUrl = '';
+    let controlModule = '';
 
-    // Determine the correct endpoint based on the file extension
+    // Determine the correct endpoint and control module based on the file extension
     switch (fileExtension) {
         case 'pptx':
-            apiUrl = `/api/powerpoint/open_presentation/?file_name=${encodeURIComponent(filePath)}`;  // Use query parameter
+            apiUrl = `/api/powerpoint/open_presentation/?file_name=${encodeURIComponent(filePath)}`;
+            controlModule = 'powerpoint';
             break;
         case 'docx':
             apiUrl = `/api/word/open_document/?file_name=${encodeURIComponent(filePath)}`;
+            controlModule = 'word';
             break;
         case 'xlsx':
             apiUrl = `/api/excel/open_workbook/?file_name=${encodeURIComponent(filePath)}`;
+            controlModule = 'excel';
             break;
         case 'pdf':
             apiUrl = `/api/pdf-reader/open/?file_name=${encodeURIComponent(filePath)}`;
+            controlModule = 'pdf';
             break;
         default:
             alert('Unsupported file type.');
@@ -118,9 +123,7 @@ function openFile(filePath) {
             alert(data.error);
         } else {
             console.log('File opened successfully:', data);
-            if (data.show_powerpoint) {
-                openPowerpoint();
-            }
+            navigateToModule(controlModule, data);
         }
     })
     .catch(error => {
@@ -128,8 +131,25 @@ function openFile(filePath) {
     });
 }
 
-
-
+// Function to navigate to the correct module based on file type
+function navigateToModule(module, data) {
+    switch (module) {
+        case 'powerpoint':
+            openPowerpoint(); // Handle PowerPoint controls
+            break;
+        case 'word':
+            openWord(); // Handle Word controls
+            break;
+        case 'excel':
+            openExcel(); // Handle Excel controls
+            break;
+        case 'pdf':
+            openPdf(); // Handle PDF controls
+            break;
+        default:
+            console.error('No module specified for navigation.');
+    }
+}
 
 function previewFile(path) {
     const filePreview = document.getElementById('file-preview');

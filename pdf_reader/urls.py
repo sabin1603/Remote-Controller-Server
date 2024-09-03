@@ -2,9 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Endpoint to list all PDF files
-    path('list/', views.list_pdfs, name='list_pdfs'),
-
     # Endpoint to open a specific PDF file
     path('open/<str:file_name>/', views.open_pdf, name='open_pdf'),
 

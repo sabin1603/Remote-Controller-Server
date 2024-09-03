@@ -34,6 +34,20 @@ def open_file(request):
         return JsonResponse({'error': 'File does not exist'}, status=400)
 
     try:
+        # Determine the module based on the file extension
+        extension = os.path.splitext(file_path)[1].lower()
+        module = None
+
+        if extension == '.pptx':
+            module = 'powerpoint'
+        elif extension == '.docx':
+            module = 'word'
+        elif extension == '.xlsx':
+            module = 'excel'
+        elif extension == '.pdf':
+            module = 'pdf-reader'
+
+        # Open the file on the server-side
         if os.name == 'nt':  # Windows
             os.startfile(file_path)
         elif os.name == 'posix':  # macOS or Linux
@@ -41,7 +55,13 @@ def open_file(request):
                 subprocess.call(['open', file_path])
             else:  # Linux
                 subprocess.call(['xdg-open', file_path])
-        return JsonResponse({'message': 'File opened successfully'})
+
+        # Respond with the appropriate module URL
+        if module:
+            return JsonResponse({'message': 'File opened successfully', 'module': module})
+        else:
+            return JsonResponse({'message': 'File opened successfully, but no module found for this file type.'})
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 

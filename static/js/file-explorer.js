@@ -76,14 +76,60 @@ function handleFileDoubleClick(event, file) {
         fetchFileTree(file.path);
         selectedFolder = null;
         clearPreview();
+    } else {
+        // Open the file using the server API
+        openFile(file.path);
     }
 }
 
-function clearSelection() {
-    document.querySelectorAll('.file-item').forEach(item => {
-        item.classList.remove('selected');
+function openFile(filePath) {
+    const fileExtension = filePath.split('.').pop().toLowerCase();
+    let apiUrl = '';
+
+    // Determine the correct endpoint based on the file extension
+    switch (fileExtension) {
+        case 'pptx':
+            apiUrl = `/api/powerpoint/open_presentation/?file_name=${encodeURIComponent(filePath)}`;  // Use query parameter
+            break;
+        case 'docx':
+            apiUrl = `/api/word/open_document/?file_name=${encodeURIComponent(filePath)}`;
+            break;
+        case 'xlsx':
+            apiUrl = `/api/excel/open_workbook/?file_name=${encodeURIComponent(filePath)}`;
+            break;
+        case 'pdf':
+            apiUrl = `/api/pdf-reader/open/?file_name=${encodeURIComponent(filePath)}`;
+            break;
+        default:
+            alert('Unsupported file type.');
+            return;
+    }
+
+    // Make a GET request to the server to open the file
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            console.log('File opened successfully:', data);
+            if (data.show_powerpoint) {
+                openPowerpoint();
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error opening file:', error);
     });
 }
+
+
+
 
 function previewFile(path) {
     const filePreview = document.getElementById('file-preview');
@@ -115,6 +161,12 @@ function previewFile(path) {
             console.error('There was a problem with the fetch operation:', error);
             filePreview.innerHTML = '<p>Unable to preview the file.</p>';
         });
+}
+
+function clearSelection() {
+    document.querySelectorAll('.file-item').forEach(item => {
+        item.classList.remove('selected');
+    });
 }
 
 function clearPreview() {
@@ -155,4 +207,20 @@ function goHome() {
 function updateNavigationButtons() {
     const backButton = document.getElementById('back-button');
     backButton.disabled = (historyIndex <= 0);
+}
+
+// Helper function to get the CSRF token from the cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

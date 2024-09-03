@@ -1,58 +1,42 @@
 let currentPresentation = null;
-
-function openPowerpoint() {
-    hideAllModules();
-    loadPresentations();
-    document.getElementById('powerpoint').style.display = 'flex';
-}
-
-function loadPresentations() {
-    fetch('/api/powerpoint/list_presentations/', { method: 'GET' })
+setInterval(checkCurrentPresentation, 5000);
+function checkCurrentPresentation() {
+    fetch('/api/powerpoint/current_presentation/', { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            if (data.presentations) {
-                const listContainer = document.getElementById('presentation-list');
-                listContainer.innerHTML = '';
-                data.presentations.forEach(presentation => {
-                    const item = document.createElement('div');
-                    item.className = 'file-item';
-                    item.innerHTML = presentation;
-                    item.onclick = () => openPresentation(presentation);
-                    listContainer.appendChild(item);
-                });
-                document.getElementById('presentation-list-container').style.display = 'block';
+            if (data.current_presentation) {
+                currentPresentation = data.current_presentation;
+                console.log('Current presentation:', currentPresentation);
             } else {
-                alert('Error loading presentations.');
+                currentPresentation = null;
+                console.log('No presentation is currently open.');
             }
         })
         .catch(error => {
-            console.error('Error loading presentations:', error);
-            alert('Error loading presentations.');
+            console.error('Error fetching current presentation:', error);
         });
 }
 
-function openPresentation(fileName) {
-    fetch(`/api/powerpoint/open_presentation/${encodeURIComponent(fileName)}/`, { method: 'GET' })
+function openPowerpoint() {
+    hideAllModules();
+    fetch('/api/powerpoint/controls/', { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            if (data.message.includes('loaded successfully')) {
-                currentPresentation = fileName;
-                document.querySelectorAll('.file-item').forEach(item => {
-                    item.classList.toggle('selected', item.innerHTML === fileName);
-                });
-                document.getElementById('presentation-list-container').style.display = 'none';
-                document.getElementById('powerpoint-controls').style.display = 'flex';
+            if (data.status === 'success') {
+                document.getElementById('powerpoint').style.display = 'flex';
+                document.getElementById('powerpoint-controls').style.display = 'flex';  // Ensure controls are visible
             } else {
-                alert(data.message);
+                alert('Error loading PowerPoint controls.');
             }
         })
         .catch(error => {
-            console.error('Error opening presentation:', error);
-            alert('Error opening presentation');
+            console.error('Error loading PowerPoint controls:', error);
+            alert('Error loading PowerPoint controls.');
         });
 }
 
 function startPresentation() {
+    checkCurrentPresentation();
     if (!currentPresentation) {
         alert('No presentation selected.');
         return;
@@ -63,7 +47,7 @@ function startPresentation() {
             if (data.message.includes('Presentation started')) {
                 console.log(data.message);
             } else {
-                alert(data.message);
+                alert('Error: ' + data.message);
             }
         })
         .catch(error => {
@@ -72,7 +56,10 @@ function startPresentation() {
         });
 }
 
+
+
 function endPresentation() {
+
     if (!currentPresentation) {
         alert('No presentation running.');
         return;
@@ -97,12 +84,18 @@ function endPresentation() {
 
 function nextSlide() {
     fetch('/api/powerpoint/next/', { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Moved to next slide')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
+        .then(response => response.text())  // Get response as text
+        .then(text => {
+            try {
+                const data = JSON.parse(text);  // Try parsing as JSON
+                if (data.message.includes('Moved to next slide')) {
+                    console.log(data.message);
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON response:', text);  // Log the full response text
+                alert('Error moving to the next slide');
             }
         })
         .catch(error => {
@@ -113,12 +106,18 @@ function nextSlide() {
 
 function prevSlide() {
     fetch('/api/powerpoint/prev/', { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Moved to previous slide')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
+        .then(response => response.text())  // Get response as text
+        .then(text => {
+            try {
+                const data = JSON.parse(text);  // Try parsing as JSON
+                if (data.message.includes('Moved to previous slide')) {
+                    console.log(data.message);
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON response:', text);  // Log the full response text
+                alert('Error moving to the previous slide');
             }
         })
         .catch(error => {

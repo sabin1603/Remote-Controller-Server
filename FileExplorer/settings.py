@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'file_explorer',
     'teams_controller',
     'corsheaders',
+    'skype_controller',
 ]
 
 MIDDLEWARE = [

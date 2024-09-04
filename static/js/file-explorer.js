@@ -77,59 +77,43 @@ function handleFileDoubleClick(event, file) {
         selectedFolder = null;
         clearPreview();
     } else {
-        // Open the file using the server API
-        openFile(file.path);
+        // Open the file using the server API for Excel
+        if (file.path.endsWith('.xlsx')) {
+            openWorkbook(file.path);  // Call openWorkbook for Excel files
+        } else {
+            openFile(file.path);  // Call the generic function for other files
+        }
     }
 }
 
+
+// Update openFile function in file-explorer.js
 function openFile(filePath) {
     const fileExtension = filePath.split('.').pop().toLowerCase();
-    let apiUrl = '';
-    let controlModule = '';
 
-    // Determine the correct endpoint and control module based on the file extension
     switch (fileExtension) {
         case 'pptx':
-            apiUrl = `/api/powerpoint/open_presentation/?file_name=${encodeURIComponent(filePath)}`;
-            controlModule = 'powerpoint';
+            // Handle PowerPoint files
+            openPowerPoint(filePath);
             break;
         case 'docx':
-            apiUrl = `/api/word/open_document/?file_name=${encodeURIComponent(filePath)}`;
-            controlModule = 'word';
+            // Handle Word documents
+            openWord(filePath);
             break;
         case 'xlsx':
-            apiUrl = `/api/excel/open_workbook/?file_name=${encodeURIComponent(filePath)}`;
-            controlModule = 'excel';
+            // Use the `openWorkbook` function in excel.js for Excel files
+            openWorkbook(filePath);
             break;
         case 'pdf':
-            apiUrl = `/api/pdf-reader/open/?file_name=${encodeURIComponent(filePath)}`;
-            controlModule = 'pdf';
+            // Handle PDF files
+            openPdf(filePath);
             break;
         default:
             alert('Unsupported file type.');
             return;
     }
-
-    // Make a GET request to the server to open the file
-    fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert(data.error);
-        } else {
-            console.log('File opened successfully:', data);
-            navigateToModule(controlModule, data);
-        }
-    })
-    .catch(error => {
-        console.error('Error opening file:', error);
-    });
 }
+
 
 // Function to navigate to the correct module based on file type
 function navigateToModule(module, data) {

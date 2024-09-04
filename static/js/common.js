@@ -9,4 +9,5 @@ function hideAllModules() {
     document.getElementById('chrome').style.display = 'none';
     document.getElementById('skype').style.display = 'none';
 
+
 }

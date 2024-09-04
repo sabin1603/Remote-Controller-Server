@@ -1,6 +1,5 @@
 let currentWorkbook = null;
 
-// Function to open Excel and set up the controls
 function openExcel() {
     hideAllModules();
     fetch('/api/excel/controls/', { method: 'GET' })
@@ -8,12 +7,7 @@ function openExcel() {
         .then(data => {
             if (data.status === 'success') {
                 document.getElementById('excel').style.display = 'flex';
-                document.getElementById('excel-controls').style.display = 'flex';
-
-                // Set the current workbook if available
-                if (data.currentWorkbook) {
-                    currentWorkbook = data.currentWorkbook; // Assuming server returns current workbook info
-                }
+                document.getElementById('excel-controls').style.display = 'flex';  // Ensure controls are visible
             } else {
                 alert('Error loading Excel controls.');
             }
@@ -24,205 +18,134 @@ function openExcel() {
         });
 }
 
-// Function to open a specific workbook
-function openWorkbook(fileName) {
-    fetch(`/api/excel/open_workbook/?file=${encodeURIComponent(fileName)}`, { method: 'GET' })
+function openWorkbook(filePath) {
+    fetch(`/api/excel/open_workbook/${encodeURIComponent(filePath)}/`, { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            if (data.status === 'success') {
-                currentWorkbook = fileName;  // Set the current workbook
-                console.log(`Opened workbook: ${currentWorkbook}`);
-                openExcel();  // Load controls once workbook is opened
+            if (data.message === "Workbook loaded successfully.") {
+                currentWorkbook = filePath;
+                openExcel();
+                alert('Workbook opened.');
             } else {
-                alert(data.message);
+                alert('Error opening workbook: ' + data.message);
             }
         })
         .catch(error => {
             console.error('Error opening workbook:', error);
-            alert('Error opening workbook');
-        });
-}
-
-// Update this to check if `currentWorkbook` is set before performing any action
-function nextWorksheet() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/next_worksheet/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Moved to next worksheet')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error moving to the next worksheet:', error);
-            alert('Error moving to the next worksheet');
-        });
-}
-
-function previousWorksheet() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/previous_worksheet/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Moved to previous worksheet')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error moving to the previous worksheet:', error);
-            alert('Error moving to the previous worksheet');
-        });
-}
-
-function zoomIn() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/zoom_in/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Zoomed in')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error zooming in:', error);
-            alert('Error zooming in');
-        });
-}
-
-function zoomOut() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/zoom_out/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Zoomed out')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error zooming out:', error);
-            alert('Error zooming out');
-        });
-}
-
-function scrollUp() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/scroll_up/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Scrolled up')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error scrolling up:', error);
-            alert('Error scrolling up');
-        });
-}
-
-function scrollDown() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/scroll_down/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Scrolled down')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error scrolling down:', error);
-            alert('Error scrolling down');
-        });
-}
-
-function customScrollLeft() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/scroll_left/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Scrolled left')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error scrolling left:', error);
-            alert('Error scrolling left');
-        });
-}
-
-function scrollRight() {
-    if (!currentWorkbook) {
-        alert('No workbook selected.');
-        return;
-    }
-    fetch(`/api/excel/scroll_right/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message.includes('Scrolled right')) {
-                console.log(data.message);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error scrolling right:', error);
-            alert('Error scrolling right');
+            alert('Error opening workbook.');
         });
 }
 
 function closeWorkbook() {
-    if (!currentWorkbook) {
-        alert('No workbook open.');
-        return;
-    }
-    fetch(`/api/excel/close/?workbook=${encodeURIComponent(currentWorkbook)}`, { method: 'GET' })
+    fetch('/api/excel/close/', { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            if (data.message.includes('Workbook closed successfully.')) {
+            if (data.message === "Workbook closed successfully.") {
                 currentWorkbook = null;
-                document.querySelectorAll('.file-item').forEach(item => item.classList.remove('selected'));
-                document.getElementById('workbook-list-container').style.display = 'block';
-                document.getElementById('excel-controls').style.display = 'none';
+                alert('Workbook closed.');
             } else {
-                alert(data.message);
+                alert('Error closing workbook: ' + data.message);
             }
         })
         .catch(error => {
             console.error('Error closing workbook:', error);
-            alert('Error closing workbook');
+            alert('Error closing workbook.');
+        });
+}
+
+// Additional functions for scrolling, zooming, etc.
+function nextWorksheet() {
+    fetch('/api/excel/next_worksheet/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error moving to next worksheet:', error);
+            alert('Error moving to next worksheet.');
+        });
+}
+
+function previousWorksheet() {
+    fetch('/api/excel/previous_worksheet/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error moving to previous worksheet:', error);
+            alert('Error moving to previous worksheet.');
+        });
+}
+
+function zoomIn() {
+    fetch('/api/excel/zoom_in/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error zooming in:', error);
+            alert('Error zooming in.');
+        });
+}
+
+function zoomOut() {
+    fetch('/api/excel/zoom_out/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error zooming out:', error);
+            alert('Error zooming out.');
+        });
+}
+
+function scrollUp() {
+    fetch('/api/excel/scroll_up/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error scrolling up:', error);
+            alert('Error scrolling up.');
+        });
+}
+
+function scrollDown() {
+    fetch('/api/excel/scroll_down/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error scrolling down:', error);
+            alert('Error scrolling down.');
+        });
+}
+
+function customScrollLeft() {
+    fetch('/api/excel/scroll_left/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error scrolling left:', error);
+            alert('Error scrolling left.');
+        });
+}
+
+function scrollRight() {
+    fetch('/api/excel/scroll_right/', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error scrolling right:', error);
+            alert('Error scrolling right.');
         });
 }

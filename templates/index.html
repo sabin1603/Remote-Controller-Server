@@ -36,6 +36,9 @@
                 <button onclick="openChrome()">
                     <i class="fa-brands fa-chrome"></i> Chrome
                 </button>
+                <button onclick="openSkype()">
+                   <i class="fa-brands fa-skype"></i> Skype
+                </button>
             </div>
         </div>
 
@@ -243,6 +246,37 @@
             </div>
         </div>
 
+        <div id="skype" class="content">
+            <div class="header">Skype</div>
+            <div id="skype-controls" class="main" style="display: none;">
+                <!-- Container for dropdown and message box -->
+              <div class="contact-area">
+                    <!-- Dropdown to select a contact -->
+                  <select id="contact-list">
+                        <option value="" disabled selected>Select a contact</option>
+                     <!-- Contacts will be populated here -->
+                 </select>
+
+                  <!-- Text area for typing messages -->
+                  <textarea id="message-box" placeholder="Type your message here"></textarea>
+              </div>
+
+              <!-- Buttons for actions -->
+              <div class="button-group">
+                    <button onclick="callSkypeUser()">
+                        <i class="fa-solid fa-phone"></i> Call
+                    </button>
+                    <button onclick="sendMessageToUser()">
+                        <i class="fa-solid fa-message"></i> Send Message
+                    </button>
+                    <button onclick="closeSkype()">
+                        <i class="fa-solid fa-xmark"></i> Close Skype
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
         <div id="partition-selection" class="partition-selection">
             <h2>Select Partition</h2>
             <button onclick="selectPartition('C:/')">C Partition</button>
@@ -258,6 +292,7 @@
     <script src="{% static 'js/word.js' %}"></script>
     <script src="{% static 'js/pdf-reader.js' %}"></script>
     <script src="{% static 'js/chrome.js' %}"></script>
+    <script src="{% static 'js/skype.js' %}"></script>
 </body>
 
 </html>

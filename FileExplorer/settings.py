@@ -44,6 +44,11 @@ INSTALLED_APPS = [
     'myapp',
     'file_explorer',
     'teams_controller',
+    'powerpoint_controller',
+    'excel_controller',
+    'word_controller',
+    'pdf_reader',
+    'chrome_controller',
     'corsheaders',
     'skype_controller',
 ]

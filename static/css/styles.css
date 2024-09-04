@@ -293,3 +293,93 @@ body {
 #chrome-controls button i {
     margin-right: 10px;
 }
+
+/* General container styles */
+#skype {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f3f4f5; /* Light background to enhance visibility */
+    border-radius: 10px; /* Rounded corners for a softer look */
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+#skype-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* Set a max-width for better control */
+}
+
+/* Container for dropdown and message box */
+.contact-area {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Styles for the contact list dropdown */
+#contact-list {
+    height: 40px; /* Set height for the dropdown */
+    width: 100%; /* Make it responsive to container width */
+    margin-bottom: 10px; /* Space between dropdown and textarea */
+    padding: 5px; /* Padding inside the dropdown */
+    border: 1px solid #ddd; /* Border for visibility */
+    border-radius: 5px; /* Rounded corners */
+    background: white; /* Background color */
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    overflow: hidden; /* Hide overflow for a cleaner look */
+    font-size: 16px; /* Adjust font size for better readability */
+}
+
+/* Styles for the message box */
+#message-box {
+    height: 100px; /* Adjust height as needed */
+    width: 100%; /* Make it responsive to container width */
+    margin-bottom: 10px; /* Space between textarea and buttons */
+    padding: 10px; /* Padding inside the textarea */
+    border: 1px solid #ddd; /* Border for visibility */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    resize: vertical; /* Allow vertical resizing */
+    font-size: 16px; /* Consistent font size */
+}
+
+/* Styles for buttons */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px; /* Set a max-width for better control */
+}
+
+.button-group button {
+    background: #00aff0; /* Skype blue */
+    color: white;
+    border: none;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center; /* Center text inside buttons */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center icons and text horizontally */
+    transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+}
+
+.button-group button:hover {
+    background: #008ccf; /* Slightly darker blue for hover effect */
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
+}
+
+.button-group button i {
+    margin-right: 10px; /* Space between icon and text */
+}
+
+

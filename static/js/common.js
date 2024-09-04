@@ -7,5 +7,6 @@ function hideAllModules() {
     document.getElementById('word').style.display = 'none';
     document.getElementById('pdf-reader').style.display = 'none';
     document.getElementById('chrome').style.display = 'none';
+    document.getElementById('skype').style.display = 'none';
 
 }

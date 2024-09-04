@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/excel/', include('excel_controller.urls')),
     path('api/word/', include('word_controller.urls')),
     path('api/pdf-reader/', include('pdf_reader.urls')),
-    path('api/chrome/', include('chrome_controller.urls')),  # Add this line
+    path('api/chrome/', include('chrome_controller.urls')),
+    path('api/skype/', include('skype_controller.urls')),
 
 ]

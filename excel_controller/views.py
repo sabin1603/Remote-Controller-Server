@@ -1,168 +1,141 @@
+# views.py
 import os
-import win32com.client
-import pythoncom
+import xlwings as xw
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.conf import settings
 
-# Initialize COM Library
-def initialize_com():
-    pythoncom.CoInitialize()
+class ExcelController:
+    def __init__(self):
+        self.app = None
+        self.workbook = None
 
-def cleanup_com():
-    pythoncom.CoUninitialize()
+    def open_workbook(self, file_path):
+        try:
+            full_path = os.path.join(settings.ROOT_EXCEL_DIR, file_path)
+            self.app = xw.App(visible=True)  # Open Excel in visible mode
+            self.workbook = self.app.books.open(full_path)
+            return True, "Workbook loaded successfully."
+        except Exception as e:
+            return False, f"Failed to load workbook: {e}"
 
-# Global variables
-excel_app = None
-workbook = None
-current_workbook = None
+    def close_workbook(self):
+        try:
+            if self.workbook:
+                self.workbook.close()
+                self.workbook = None
+            if self.app:
+                self.app.quit()
+                self.app = None
+            return True, "Workbook closed successfully."
+        except Exception as e:
+            return False, f"Error closing workbook: {e}"
 
+    def change_worksheet(self, next_sheet=True):
+        try:
+            if not self.workbook:
+                return False, "No workbook loaded."
+            current_sheet_index = self.workbook.sheets.active.index
+            new_index = current_sheet_index + 1 if next_sheet else current_sheet_index - 1
+            if 1 <= new_index <= len(self.workbook.sheets):
+                self.workbook.sheets[new_index].activate()
+                return True, "Worksheet changed."
+            else:
+                return False, "Already on the last or first worksheet."
+        except Exception as e:
+            return False, f"Error changing worksheet: {e}"
+
+    def zoom(self, zoom_in=True):
+        try:
+            if not self.workbook:
+                return False, "No workbook loaded."
+            active_window = self.workbook.app.api.ActiveWindow
+            zoom_value = active_window.Zoom
+            new_zoom = zoom_value + 10 if zoom_in else zoom_value - 10
+            active_window.Zoom = new_zoom
+            return True, "Zoom adjusted."
+        except Exception as e:
+            return False, f"Error adjusting zoom: {e}"
+
+    def scroll(self, direction):
+        try:
+            if not self.workbook:
+                return False, "No workbook loaded."
+            active_window = self.workbook.app.api.ActiveWindow
+            if direction == 'up':
+                active_window.ScrollRow -= 1
+            elif direction == 'down':
+                active_window.ScrollRow += 1
+            elif direction == 'left':
+                active_window.ScrollColumn -= 1
+            elif direction == 'right':
+                active_window.ScrollColumn += 1
+            return True, "Scrolled successfully."
+        except Exception as e:
+            return False, f"Error scrolling: {e}"
+
+excel_controller = ExcelController()
+
+@require_GET
+def open_workbook(request, file_path):
+    success, message = excel_controller.open_workbook(file_path)
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def close_workbook(request):
+    success, message = excel_controller.close_workbook()
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def next_worksheet(request):
+    success, message = excel_controller.change_worksheet(next_sheet=True)
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def previous_worksheet(request):
+    success, message = excel_controller.change_worksheet(next_sheet=False)
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def zoom_in(request):
+    success, message = excel_controller.zoom(zoom_in=True)
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def zoom_out(request):
+    success, message = excel_controller.zoom(zoom_in=False)
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def scroll_up(request):
+    success, message = excel_controller.scroll('up')
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def scroll_down(request):
+    success, message = excel_controller.scroll('down')
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def scroll_left(request):
+    success, message = excel_controller.scroll('left')
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
+def scroll_right(request):
+    success, message = excel_controller.scroll('right')
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
 
 @require_GET
 def excel_controls(request):
     return JsonResponse({"message": "Excel controls loaded", "status": "success"})
-
-def get_excel_instance():
-    global excel_app
-    if not excel_app:
-        try:
-            initialize_com()
-            excel_app = win32com.client.Dispatch("Excel.Application")
-            excel_app.Visible = True
-        except Exception as e:
-            return None, str(e)
-    return excel_app, None
-
-@require_GET
-def open_workbook(request, file_path):
-    global workbook, current_workbook
-    app, error = get_excel_instance()
-    if error:
-        return JsonResponse({"message": f"Failed to access Excel: {error}"}, status=500)
-
-    full_path = os.path.join(settings.ROOT_EXCEL_DIR, file_path)
-
-    try:
-        if workbook:
-            workbook.Close(False)
-        workbook = app.Workbooks.Open(full_path)
-        app.ActiveWindow.Activate()
-        current_workbook = full_path
-        return JsonResponse({"message": "Workbook loaded successfully.", "file_path": file_path})
-    except Exception as e:
-        return JsonResponse({"message": f"Failed to load workbook: {e}"}, status=500)
-
-@require_GET
-def close_workbook(request):
-    global workbook, excel_app
-    if not workbook:
-        return JsonResponse({"message": "No workbook is currently open"}, status=400)
-    try:
-        workbook.Close(False)
-        workbook = None
-
-        if not excel_app.Workbooks.Count:
-            excel_app.Quit()
-            excel_app = None
-            cleanup_com()
-        return JsonResponse({"message": "Workbook closed successfully."})
-    except Exception as e:
-        return JsonResponse({"message": f"Error closing workbook: {e}"}, status=500)
-
-@require_GET
-def next_worksheet(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        current_sheet_index = workbook.ActiveSheet.Index
-        next_sheet_index = current_sheet_index + 1
-        if next_sheet_index <= workbook.Sheets.Count:
-            workbook.Sheets(next_sheet_index).Activate()
-            return JsonResponse({"message": "Moved to next worksheet."})
-        else:
-            return JsonResponse({"message": "Already on the last worksheet."}, status=400)
-    except Exception as e:
-        return JsonResponse({"message": f"Error moving to the next worksheet: {e}"}, status=500)
-
-@require_GET
-def previous_worksheet(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        current_sheet_index = workbook.ActiveSheet.Index
-        previous_sheet_index = current_sheet_index - 1
-        if previous_sheet_index >= 1:
-            workbook.Sheets(previous_sheet_index).Activate()
-            return JsonResponse({"message": "Moved to previous worksheet."})
-        else:
-            return JsonResponse({"message": "Already on the first worksheet."}, status=400)
-    except Exception as e:
-        return JsonResponse({"message": f"Error moving to the previous worksheet: {e}"}, status=500)
-
-@require_GET
-def zoom_in(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        workbook.Application.ActiveWindow.Zoom += 10
-        return JsonResponse({"message": "Zoomed in."})
-    except Exception as e:
-        return JsonResponse({"message": f"Error zooming in: {e}"}, status=500)
-
-@require_GET
-def zoom_out(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        workbook.Application.ActiveWindow.Zoom -= 10
-        return JsonResponse({"message": "Zoomed out."})
-    except Exception as e:
-        return JsonResponse({"message": f"Error zooming out: {e}"}, status=500)
-
-@require_GET
-def scroll_up(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        workbook.Application.ActiveWindow.ScrollRow -= 1
-        return JsonResponse({"message": "Scrolled up."})
-    except Exception as e:
-        return JsonResponse({"message": f"Error scrolling up: {e}"}, status=500)
-
-@require_GET
-def scroll_down(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        workbook.Application.ActiveWindow.ScrollRow += 1
-        return JsonResponse({"message": "Scrolled down."})
-    except Exception as e:
-        return JsonResponse({"message": f"Error scrolling down: {e}"}, status=500)
-
-@require_GET
-def scroll_left(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        workbook.Application.ActiveWindow.ScrollColumn -= 1
-        return JsonResponse({"message": "Scrolled left."})
-    except Exception as e:
-        return JsonResponse({"message": f"Error scrolling left: {e}"}, status=500)
-
-@require_GET
-def scroll_right(request):
-    global workbook
-    if not workbook:
-        return JsonResponse({"message": "No workbook loaded"}, status=400)
-    try:
-        workbook.Application.ActiveWindow.ScrollColumn += 1
-        return JsonResponse({"message": "Scrolled right."})
-    except Exception as e:
-        return JsonResponse({"message": f"Error scrolling right: {e}"}, status=500)

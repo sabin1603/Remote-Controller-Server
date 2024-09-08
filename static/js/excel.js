@@ -53,7 +53,6 @@ function closeWorkbook() {
         });
 }
 
-// Additional functions for scrolling, zooming, etc.
 function nextWorksheet() {
     fetch('/api/excel/next_worksheet/', { method: 'GET' })
         .then(response => response.json())

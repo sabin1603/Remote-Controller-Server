@@ -77,61 +77,19 @@ function handleFileDoubleClick(event, file) {
         selectedFolder = null;
         clearPreview();
     } else {
-        // Open the file using the server API for Excel
+        // Open the file using the server API
         if (file.path.endsWith('.xlsx')) {
-            openWorkbook(file.path);  // Call openWorkbook for Excel files
+            openWorkbook(file.path);
+        } else if (file.path.endsWith('.pptx')) {
+            openPresentation(file.path);
+        } else if (file.path.endsWith('.docx')) {
+            openDocument(file.path);
+        } else if (file.path.endsWith('.pdf')) {
+            openPdf(file.path);
         } else {
-            openFile(file.path);  // Call the generic function for other files
+            console.error("File type unsupported.");
+            alert("File type unsupported");
         }
-    }
-}
-
-
-// Update openFile function in file-explorer.js
-function openFile(filePath) {
-    const fileExtension = filePath.split('.').pop().toLowerCase();
-
-    switch (fileExtension) {
-        case 'pptx':
-            // Handle PowerPoint files
-            openPowerPoint(filePath);
-            break;
-        case 'docx':
-            // Handle Word documents
-            openWord(filePath);
-            break;
-        case 'xlsx':
-            // Use the `openWorkbook` function in excel.js for Excel files
-            openWorkbook(filePath);
-            break;
-        case 'pdf':
-            // Handle PDF files
-            openPdf(filePath);
-            break;
-        default:
-            alert('Unsupported file type.');
-            return;
-    }
-}
-
-
-// Function to navigate to the correct module based on file type
-function navigateToModule(module, data) {
-    switch (module) {
-        case 'powerpoint':
-            openPowerpoint(); // Handle PowerPoint controls
-            break;
-        case 'word':
-            openWord(); // Handle Word controls
-            break;
-        case 'excel':
-            openExcel(); // Handle Excel controls
-            break;
-        case 'pdf':
-            openPdf(); // Handle PDF controls
-            break;
-        default:
-            console.error('No module specified for navigation.');
     }
 }
 
@@ -211,20 +169,4 @@ function goHome() {
 function updateNavigationButtons() {
     const backButton = document.getElementById('back-button');
     backButton.disabled = (historyIndex <= 0);
-}
-
-// Helper function to get the CSRF token from the cookie
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
 }

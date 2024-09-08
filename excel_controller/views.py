@@ -1,67 +1,109 @@
-# views.py
+import pythoncom
 import os
 import xlwings as xw
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.conf import settings
+import threading
+
+class ExcelWorkerThread(threading.Thread):
+    """Dedicated worker thread for handling Excel operations."""
+    def __init__(self):
+        super().__init__()
+        self.app = None
+        self.workbook = None
+        self.lock = threading.Lock()
+        self.queue = []
+        self.running = True
+
+    def run(self):
+        """Thread main loop to process Excel commands."""
+        pythoncom.CoInitialize()
+        try:
+            while self.running:
+                if self.queue:
+                    with self.lock:
+                        func, args, kwargs = self.queue.pop(0)
+                    try:
+                        func(*args, **kwargs)
+                    except Exception as e:
+                        print(f"Error during Excel operation: {e}")
+        finally:
+            pythoncom.CoUninitialize()
+
+    def add_to_queue(self, func, *args, **kwargs):
+        """Add a function to the queue for execution in the Excel thread."""
+        with self.lock:
+            self.queue.append((func, args, kwargs))
+
+    def initialize_excel(self):
+        """Initializes the Excel application."""
+        self.app = xw.App(visible=True)  # Open Excel in visible mode
+
+    def open_workbook(self, file_path):
+        """Opens an Excel workbook."""
+        full_path = os.path.join(settings.ROOT_EXCEL_DIR, file_path)
+        self.workbook = self.app.books.open(full_path)
+
+    def close_workbook(self):
+        """Closes the Excel workbook."""
+        if self.workbook:
+            self.workbook.close()
+            self.workbook = None
+
+    def quit_excel(self):
+        """Quits the Excel application."""
+        if self.app:
+            self.app.quit()
+            self.app = None
+
+    def stop(self):
+        """Stops the worker thread."""
+        self.running = False
+        self.add_to_queue(lambda: None)  # Add a no-op to unblock the loop
 
 class ExcelController:
     def __init__(self):
-        self.app = None
-        self.workbook = None
+        self.worker_thread = ExcelWorkerThread()
+        self.worker_thread.start()
+        self.worker_thread.add_to_queue(self.worker_thread.initialize_excel)
 
     def open_workbook(self, file_path):
-        try:
-            full_path = os.path.join(settings.ROOT_EXCEL_DIR, file_path)
-            self.app = xw.App(visible=True)  # Open Excel in visible mode
-            self.workbook = self.app.books.open(full_path)
-            return True, "Workbook loaded successfully."
-        except Exception as e:
-            return False, f"Failed to load workbook: {e}"
+        self.worker_thread.add_to_queue(self.worker_thread.open_workbook, file_path)
+        return True, "Workbook loaded successfully."
 
     def close_workbook(self):
-        try:
-            if self.workbook:
-                self.workbook.close()
-                self.workbook = None
-            if self.app:
-                self.app.quit()
-                self.app = None
-            return True, "Workbook closed successfully."
-        except Exception as e:
-            return False, f"Error closing workbook: {e}"
+        self.worker_thread.add_to_queue(self.worker_thread.close_workbook)
+        return True, "Workbook closed successfully."
 
     def change_worksheet(self, next_sheet=True):
-        try:
-            if not self.workbook:
-                return False, "No workbook loaded."
-            current_sheet_index = self.workbook.sheets.active.index
+        def change_sheet():
+            if not self.worker_thread.workbook:
+                raise Exception("No workbook loaded.")
+            current_sheet_index = self.worker_thread.workbook.api.ActiveSheet.Index
             new_index = current_sheet_index + 1 if next_sheet else current_sheet_index - 1
-            if 1 <= new_index <= len(self.workbook.sheets):
-                self.workbook.sheets[new_index].activate()
-                return True, "Worksheet changed."
-            else:
-                return False, "Already on the last or first worksheet."
-        except Exception as e:
-            return False, f"Error changing worksheet: {e}"
+            sheet_count = self.worker_thread.workbook.sheets.count
+            if 1 <= new_index <= sheet_count:
+                self.worker_thread.workbook.sheets[new_index].activate()
+        self.worker_thread.add_to_queue(change_sheet)
+        return True, "Worksheet changed."
 
     def zoom(self, zoom_in=True):
-        try:
-            if not self.workbook:
-                return False, "No workbook loaded."
-            active_window = self.workbook.app.api.ActiveWindow
+        def adjust_zoom():
+            if not self.worker_thread.workbook:
+                raise Exception("No workbook loaded.")
+            active_window = self.worker_thread.workbook.app.api.ActiveWindow
             zoom_value = active_window.Zoom
             new_zoom = zoom_value + 10 if zoom_in else zoom_value - 10
             active_window.Zoom = new_zoom
-            return True, "Zoom adjusted."
-        except Exception as e:
-            return False, f"Error adjusting zoom: {e}"
+        self.worker_thread.add_to_queue(adjust_zoom)
+        return True, "Zoom adjusted."
 
     def scroll(self, direction):
-        try:
-            if not self.workbook:
-                return False, "No workbook loaded."
-            active_window = self.workbook.app.api.ActiveWindow
+        def perform_scroll():
+            if not self.worker_thread.workbook:
+                raise Exception("No workbook loaded.")
+            active_window = self.worker_thread.workbook.app.api.ActiveWindow
             if direction == 'up':
                 active_window.ScrollRow -= 1
             elif direction == 'down':
@@ -70,9 +112,13 @@ class ExcelController:
                 active_window.ScrollColumn -= 1
             elif direction == 'right':
                 active_window.ScrollColumn += 1
-            return True, "Scrolled successfully."
-        except Exception as e:
-            return False, f"Error scrolling: {e}"
+        self.worker_thread.add_to_queue(perform_scroll)
+        return True, "Scrolled successfully."
+
+    def cleanup(self):
+        self.worker_thread.add_to_queue(self.worker_thread.quit_excel)
+        self.worker_thread.stop()
+        self.worker_thread.join()
 
 excel_controller = ExcelController()
 

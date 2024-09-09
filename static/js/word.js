@@ -1,6 +1,5 @@
 let currentDocument = null;
 
-// Function to open the Word module
 function openWord() {
     hideAllModules();
     fetch('/api/word/controls/', { method: 'GET' })
@@ -15,7 +14,6 @@ function openWord() {
         })
         .catch(handleApiError);
 }
-
 
 function openDocument(filePath) {
     fetch(`/api/word/open_document/${encodeURIComponent(filePath)}/`, { method: 'GET' })

@@ -1,5 +1,3 @@
-# pdf_reader/views.py
-
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from urllib.parse import unquote

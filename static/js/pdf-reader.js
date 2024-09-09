@@ -81,7 +81,6 @@ function zoomInPdf() {
         .catch(handleApiError);
 }
 
-// Function to zoom out on the PDF document
 function zoomOutPdf() {
     if (!currentPdf) {
         alert('No PDF selected.');
@@ -99,7 +98,6 @@ function zoomOutPdf() {
         .catch(handleApiError);
 }
 
-// Function to enable read mode in the PDF document
 function enableReadModePdf() {
     if (!currentPdf) {
         alert('No PDF selected.');
@@ -117,7 +115,6 @@ function enableReadModePdf() {
         .catch(handleApiError);
 }
 
-// Function to disable read mode in the PDF document
 function disableReadModePdf() {
     if (!currentPdf) {
         alert('No PDF selected.');
@@ -135,7 +132,6 @@ function disableReadModePdf() {
         .catch(handleApiError);
 }
 
-// Function to save the PDF document
 function savePdf() {
     if (!currentPdf) {
         alert('No PDF selected.');
@@ -153,7 +149,6 @@ function savePdf() {
         .catch(handleApiError);
 }
 
-// Function to print the PDF document
 function printPdf() {
     if (!currentPdf) {
         alert('No PDF selected.');

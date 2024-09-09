@@ -15,11 +15,10 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ROOT_DIR = 'C:\\Users\\Sabin\\OneDrive - Universitatea Babeş-Bolyai'
-
-ROOT_EXCEL_DIR = 'C:\\Users\Sabin\\Documents'
-ROOT_WORD_DIR = 'C:\\Users\Sabin\\Documents'
-ROOT_PDF_DIR = 'C:\\Users\Sabin\\Documents\\SDG App sample data'
+ROOT_DIR = BASE_DIR
+ROOT_EXCEL_DIR = BASE_DIR
+ROOT_WORD_DIR = BASE_DIR
+ROOT_PDF_DIR = BASE_DIR
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/

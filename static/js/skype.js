@@ -1,4 +1,3 @@
-// Function to handle opening Skype
 function openSkype() {
     hideAllModules();
     fetch('/api/skype/open/', { method: 'GET' })
@@ -22,7 +21,6 @@ function openSkype() {
         });
 }
 
-// Function to handle closing Skype
 function closeSkype() {
     fetch('/api/skype/close/', { method: 'GET' })
         .then(response => response.json())
@@ -40,7 +38,6 @@ function closeSkype() {
         });
 }
 
-// Function to fetch and populate Skype contacts
 function fetchSkypeContacts() {
     fetch('/api/skype/get_contacts/', { method: 'GET' })
         .then(response => response.json())
@@ -62,7 +59,7 @@ function fetchSkypeContacts() {
             console.error('Error fetching contacts:', error);
         });
 }
-// Function to handle calling a Skype user
+
 function callSkypeUser() {
     const username = document.getElementById('contact-list').value;
     if (username) {
@@ -80,7 +77,6 @@ function callSkypeUser() {
     }
 }
 
-// Function to handle sending a message to a Skype user
 function sendMessageToUser() {
     const username = document.getElementById('contact-list').value;
     const message = encodeURIComponent(document.getElementById('message-box').value);

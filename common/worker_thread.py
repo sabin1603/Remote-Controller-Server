@@ -1,7 +1,6 @@
 import threading
 import pythoncom
 
-
 class WorkerThread(threading.Thread):
     """Generic worker thread for handling application operations."""
 
@@ -18,7 +17,7 @@ class WorkerThread(threading.Thread):
         """Thread main loop to process commands."""
         pythoncom.CoInitialize()
         if self.init_func:
-            self.init_func()  # Call the initialization function, if provided
+            self.init_func()
         try:
             while self.running:
                 if self.queue:

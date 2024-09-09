@@ -1,4 +1,3 @@
-// Function to handle opening Chrome
 function openChrome() {
     hideAllModules();
     fetch('/api/chrome/open_chrome/', { method: 'GET' })
@@ -21,7 +20,6 @@ function openChrome() {
         });
 }
 
-// Add functions for Chrome controls
 function goHome() {
     fetch('/api/chrome/go_home/', { method: 'POST' });
 }
@@ -70,7 +68,6 @@ function scrollDownChrome() {
     fetch('/api/chrome/scroll_down/', { method: 'POST' });
 }
 
-// Existing toggleNavigationMode function updated
 function toggleNavigationMode() {
     enterNavigationMode();
     let navModeContainer = document.getElementById('navigation-mode');
@@ -88,7 +85,6 @@ function toggleNavigationMode() {
     }
 }
 
-// New function to specifically close navigation mode
 function closeNavigationMode() {
     let navModeContainer = document.getElementById('navigation-mode');
     let chromeControls = document.getElementById('chrome-controls');
@@ -99,7 +95,6 @@ function closeNavigationMode() {
     closeNavButton.style.display = 'none';
 }
 
-// Navigation mode functions
 function enterNavigationMode() {
     let query = document.getElementById('search-box').value;
     fetch('/api/chrome/navigate/', {

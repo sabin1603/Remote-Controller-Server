@@ -12,7 +12,11 @@ class ExcelWorkerThread(WorkerThread):
 
     def initialize_excel(self):
         """Initializes the Excel application."""
-        self.app = xw.App(visible=True)  # Open Excel in visible mode
+        try:
+            self.app = xw.App(visible=True)  # Open Excel in visible mode
+        except Exception as e:
+            print(f"Failed to initialize Excel: {e}")
+            self.app = None
 
     def open_workbook(self, file_path):
         """Opens an Excel workbook."""
@@ -22,14 +26,20 @@ class ExcelWorkerThread(WorkerThread):
     def close_workbook(self):
         """Closes the Excel workbook."""
         if self.workbook:
-            self.workbook.close()
-            self.workbook = None
+            try:
+                self.workbook.close()
+                self.workbook = None
+            except Exception as e:
+                print (f"Failed to close workbook: {e}")
 
     def quit_excel(self):
         """Quits the Excel application."""
         if self.app:
-            self.app.quit()
-            self.app = None
+            try:
+                self.app.quit()
+                self.app = None
+            except Exception as e:
+                print(f"Failed to quit Excel: {e}")
 
 
 class ExcelController:
@@ -58,11 +68,22 @@ class ExcelController:
         def change_sheet():
             if not self.worker_thread.workbook:
                 raise Exception("No workbook loaded.")
-            current_sheet_index = self.worker_thread.workbook.api.ActiveSheet.Index
-            new_index = current_sheet_index + 1 if next_sheet else current_sheet_index - 1
-            sheet_count = self.worker_thread.workbook.sheets.count
-            if 1 <= new_index <= sheet_count:
-                self.worker_thread.workbook.sheets[new_index].activate()
+
+            workbook = self.worker_thread.workbook
+            current_sheet_index = workbook.api.ActiveSheet.Index
+
+            if next_sheet:
+                new_index = current_sheet_index + 1
+                if new_index <= workbook.api.Sheets.Count:
+                    workbook.api.Sheets(new_index).Activate()
+                else:
+                    raise IndexError("Already on the last worksheet.")
+            else:
+                new_index = current_sheet_index - 1
+                if new_index >= 1:
+                    workbook.api.Sheets(new_index).Activate()
+                else:
+                    raise IndexError("Already on the first worksheet.")
 
         self.worker_thread.add_to_queue(change_sheet)
         return True, "Worksheet changed."

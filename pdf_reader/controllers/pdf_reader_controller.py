@@ -1,13 +1,9 @@
-import win32com
-
 from common.worker_thread import WorkerThread
 import os
 import urllib.parse
 import subprocess
 import traceback
-from django.conf import settings
 import pyautogui
-import psutil
 
 ADOBE_ACROBAT_PATH = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 

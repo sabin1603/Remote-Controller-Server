@@ -7,7 +7,7 @@ function openExcel() {
         .then(data => {
             if (data.status === 'success') {
                 document.getElementById('excel').style.display = 'flex';
-                document.getElementById('excel-controls').style.display = 'flex';  // Ensure controls are visible
+                document.getElementById('excel-controls').style.display = 'flex';
             } else {
                 alert('Error loading Excel controls.');
             }

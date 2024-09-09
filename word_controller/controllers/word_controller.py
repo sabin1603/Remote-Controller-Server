@@ -58,15 +58,6 @@ class WordWorkerThread(WorkerThread):
             except Exception as e:
                 print (f"Failed to close document: {e}")
 
-    def quit_word(self):
-        """Quits the Word application."""
-        if self.app:
-            try:
-                self.app.Quit()
-                self.app = None
-            except Exception as e:
-                print(f"Failed to quit Word: {e}")
-
     def scroll_up(self):
         """Scrolls up in the Word document."""
         if self.document:
@@ -184,9 +175,3 @@ class WordController:
             self.worker_thread.stop()
             self.worker_thread.join()
             self.worker_thread = None
-
-
-
-
-
-

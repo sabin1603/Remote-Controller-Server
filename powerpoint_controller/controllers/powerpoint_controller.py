@@ -41,7 +41,6 @@ class PowerPointWorkerThread(WorkerThread):
                 self.presentation.Close()
             self.presentation = self.app.Presentations.Open(full_path)
         except Exception as e:
-            import traceback
             error_msg = f"Failed to open presentation: {e}"
             traceback_msg = traceback.format_exc()
             print(error_msg)
@@ -101,16 +100,25 @@ class PowerPointWorkerThread(WorkerThread):
 
 class PowerPointController:
     def __init__(self):
-        self.worker_thread = PowerPointWorkerThread()
-        self.worker_thread.start()
+        self.worker_thread = None
+
+    def start_worker(self):
+        """Starts the worker thread if not already running."""
+        if not self.worker_thread:
+            self.worker_thread = PowerPointWorkerThread()
+            self.worker_thread.start()
 
     def open_presentation(self, file_path):
+        self.start_worker()
         self.worker_thread.add_to_queue(self.worker_thread.open_presentation, file_path)
         return True, "Presentation loaded successfully."
 
     def close_presentation(self):
-        self.worker_thread.add_to_queue(self.worker_thread.close_presentation)
-        return True, "Presentation closed successfully."
+        if self.worker_thread:
+            self.worker_thread.add_to_queue(self.worker_thread.close_presentation)
+            self.cleanup()
+            return True, "Presentation closed successfully."
+        return False, "No active presentation to close."
 
     def next_slide(self):
         self.worker_thread.add_to_queue(self.worker_thread.next_slide)
@@ -129,6 +137,9 @@ class PowerPointController:
         return True, "Presentation ended."
 
     def cleanup(self):
-        self.worker_thread.add_to_queue(self.worker_thread.quit_powerpoint)
-        self.worker_thread.stop()
-        self.worker_thread.join()
+        """Cleanup resources and stop the worker thread."""
+        if self.worker_thread:
+            self.worker_thread.add_to_queue(self.worker_thread.quit_powerpoint)
+            self.worker_thread.stop()
+            self.worker_thread.join()
+            self.worker_thread = None

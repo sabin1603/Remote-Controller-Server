@@ -50,6 +50,7 @@ class ExcelController:
     def close_workbook(self):
         if self.worker_thread:
             self.worker_thread.add_to_queue(self.worker_thread.close_workbook)
+            self.cleanup()
             return True, "Workbook closed successfully."
         return False, "No active workbook to close."
 

@@ -26,14 +26,14 @@ body {
     flex-direction: column;
 }
 .sidebar .buttons button {
-    background: #1a73e8;
-    color: white;
+    background: #7794f3;
+    color: #ffffff;
     border: none;
     padding: 15px;
     margin-bottom: 10px;
     cursor: pointer;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 18px;
     text-align: left;
     display: flex;
     align-items: center;
@@ -41,8 +41,9 @@ body {
 .sidebar .buttons button i {
     margin-right: 10px;
 }
+
 .header {
-    background: #737373;
+    background: linear-gradient(90deg, #737373, #3f3f3f);
     color: white;
     padding: 20px;
     text-align: center;
@@ -191,7 +192,7 @@ body {
     margin-right: 10px;
 }
 #teams-controls button {
-    background: #1a73e8;
+    background: #5864A6;
     color: white;
     border: none;
     padding: 15px;
@@ -210,88 +211,165 @@ body {
     margin-left: 10px;
 }
 
+.teams-header-bar {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    background: linear-gradient(90deg, #8091F2, #5864A6); /* Gradient background */
+    padding: 15px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners for modern look */
+
+}
+
 #powerpoint-controls button {
-    background: #ed6c47;
+    background: #C13B1B;
     color: white;
-    border: none;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 30px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 20px;
     text-align: left;
     display: flex;
     align-items: center;
+    border: 1px solid black;
 }
 #powerpoint-controls button i {
     margin-right: 10px;
 }
 
+.powerpoint-header-bar {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    background: linear-gradient(90deg, #D35230, #C13B1B); /* Gradient background */
+    padding: 15px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners for modern look */
+
+}
+
 #excel-controls button {
     background: #1d6f42;
     color: white;
-    border: none;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 30px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 20px;
     text-align: left;
     display: flex;
     align-items: center;
+    border: 1px solid black;
 }
 #excel-controls button i {
     margin-right: 10px;
 }
 
+.excel-header-bar {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    background: linear-gradient(90deg, #4a8c68, #1d6f42); /* Gradient background */
+    padding: 15px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners for modern look */
+
+}
+
 #word-controls button {
     background: #1B5EBE;
     color: white;
-    border: none;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 30px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 20px;
     text-align: left;
     display: flex;
     align-items: center;
+    border: 1px solid black;
 }
 #word-controls button i {
     margin-right: 10px;
 }
 
+.word-header-bar {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    background: linear-gradient(90deg, #41A5EE, #1B5EBE); /* Gradient background */
+    padding: 15px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners for modern look */
+}
+
 #pdf-reader-controls button {
     background: #f40f02;
     color: white;
-    border: none;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 30px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 20px;
     text-align: left;
     display: flex;
     align-items: center;
+    border: 1px solid black;
 }
 #pdf-reader-controls button i {
     margin-right: 10px;
 }
 
+.pdf-reader-header-bar {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    background: linear-gradient(90deg, #f16a6a, #f40f02); /* Gradient background */
+    padding: 15px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners for modern look */
+
+}
+
 #chrome-controls button {
     background: #ffcd46;
     color: white;
-    border: none;
-    padding: 15px;
-    margin-bottom: 10px;
+    padding: 20px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 15px;
     text-align: left;
     display: flex;
     align-items: center;
+    border: 1px solid black;
 }
 #chrome-controls button i {
+    margin-right: 10px;
+}
+
+.chrome-header-bar {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    background: linear-gradient(90deg, #f6d272, #ffcd46); /* Gradient background */
+    padding: 15px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    color: #ffffff; /* Text color */
+    border-radius: 8px; /* Rounded corners for modern look */
+
+}
+
+#navigation-mode-controls button {
+    background: #7794f3;
+    color: white;
+    padding: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 15px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+}
+
+#navigation-mode-controls button i {
     margin-right: 10px;
 }
 
@@ -381,6 +459,96 @@ body {
 
 .button-group button i {
     margin-right: 10px; /* Space between icon and text */
+}
+
+.skype-header {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font similar to Skype */
+    color: #ffffff; /* White */
+    font-size: 36px; /* Slightly larger font size for emphasis */
+    font-weight: 600; /* Semi-bold for a modern look */
+    text-align: center; /* Centered text */
+    margin: 20px 0; /* Margin for spacing */
+    background: #00aff0; /* Remove any background */
+    border: none; /* Remove any border */
+}
+
+/* Sidebar Header Content */
+.header-content {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+}
+
+.header-content i {
+    font-size: 24px; /* Icon size */
+    margin-right: 10px; /* Spacing between icon and text */
+}
+
+.header-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    font-size: 24px; /* Font size */
+    font-weight: bold; /* Bold text */
+}
+
+/* Main Sidebar Header Bar */
+.file-explorer-header-bar {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+    background: linear-gradient(90deg, #7558a6, #5864a6); /* Gradient background */
+    padding: 15px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners for modern look */
+    margin-top: 60px; /* Space from buttons */
+}
+
+/* Sidebar Header Content */
+.header-content {
+    display: flex;
+    align-items: center; /* Center icon and text vertically */
+}
+
+.header-content i {
+    font-size: 24px; /* Icon size */
+    margin-right: 10px; /* Spacing between icon and text */
+}
+
+.header-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    font-size: 24px; /* Font size */
+    font-weight: bold; /* Bold text */
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+    display: block; /* Display buttons horizontally */
+    gap: 10px; /* Space between buttons */
+    position: absolute; /* Position them absolutely */
+    top: 5px;
+    left: 271px; /* Align to the left */
+    width: 197px;
+    background: linear-gradient(90deg, #7558a6, #5864a6); /* Same color as the sidebar */
+    border: none; /* No border */
+    padding: 10px; /* Padding around buttons */
+    border-radius: 8px; /* Rounded corners to blend */
+}
+
+/* Individual Button Styling */
+.nav-buttons button {
+    background: linear-gradient(90deg, #7558a6, #5864a6); /* Semi-transparent background for button */
+    border: none; /* No border */
+    color: #ffffff; /* Button icon color */
+    font-size: 18px; /* Icon size */
+    cursor: pointer; /* Pointer cursor */
+    padding: 10px 12px; /* Button padding */
+    border-radius: 8px; /* Rounded corners */
+    transition: background 0.3s, transform 0.2s; /* Smooth transitions */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for floating effect */
+}
+
+/* Button Hover Effect */
+.nav-buttons button:hover {
+    background: rgb(88, 106, 166); /* Hover effect */
+    transform: scale(1.1); /* Slight zoom effect on hover */
 }
 
 

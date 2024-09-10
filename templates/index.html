@@ -16,45 +16,55 @@
         <div class="sidebar">
             <div class="buttons">
                 <button onclick="showFileExplorer()">
-                    <i class="fas fa-folder"></i> File Explorer
+                    <img width="48" height="48" src="https://img.icons8.com/fluency/48/windows-explorer.png" alt="windows-explorer"/> File Explorer
                 </button>
                 <button onclick="openTeams()">
-                    <i class="fab fa-microsoft"></i> Microsoft Teams
+                    <img width="48" height="48" src="https://img.icons8.com/fluency/48/microsoft-teams-2019.png" alt="microsoft-teams-2019"/> Microsoft Teams
                 </button>
                 <button onclick="openPowerpoint()">
-                    <i class="fas fa-file-powerpoint"></i> Microsoft PowerPoint
+                    <img width="48" height="48" src="https://img.icons8.com/color/48/microsoft-powerpoint-2019--v1.png" alt="microsoft-powerpoint-2019--v1"/> Microsoft PowerPoint
                 </button>
                 <button onclick="openExcel()">
-                    <i class="fa-solid fa-file-excel"></i> Microsoft Excel
+                    <img width="48" height="48" src="https://img.icons8.com/fluency/48/microsoft-excel-2019.png" alt="microsoft-excel-2019"/> Microsoft Excel
                 </button>
                 <button onclick="openWord()">
-                    <i class="fa-solid fa-file-word"></i> Microsoft Word
+                    <img width="48" height="48" src="https://img.icons8.com/fluency/48/microsoft-word-2019.png" alt="microsoft-word-2019"/> Microsoft Word
                 </button>
                 <button onclick="openPdfReader()">
-                    <i class="fa-solid fa-file-pdf"></i> PDF Reader
+                    <img width="48" height="48" src="https://img.icons8.com/color/48/adobe-acrobat--v1.png" alt="adobe-acrobat--v1"/> PDF Reader
                 </button>
                 <button onclick="openChrome()">
-                    <i class="fa-brands fa-chrome"></i> Chrome
+                    <img width="48" height="48" src="https://img.icons8.com/fluency/48/chrome.png" alt="chrome"/> Chrome
                 </button>
                 <button onclick="openSkype()">
-                   <i class="fa-brands fa-skype"></i> Skype
+                   <img width="48" height="48" src="https://img.icons8.com/color/48/skype--v1.png" alt="skype--v1"/> Skype
                 </button>
             </div>
         </div>
 
         <div id="file-explorer" class="content">
-            <div class="header">File Explorer</div>
-            <div class="nav-buttons">
-                <button onclick="goBack()" id="back-button" disabled>
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <button onclick="goForward()">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-                <button onclick="refresh()">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
+            <div class="file-explorer-header-bar">
+                <!-- Header Text with Icon -->
+                <div class="header-content">
+                  <i class="fa-solid fa-folder-open"></i> <!-- File Explorer Icon -->
+                    <div class="header-title">File Explorer</div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="nav-buttons">
+                    <button onclick="goBack()" id="back-button" disabled title="Go Back">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button onclick="goForward()" title="Go Forward">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button onclick="refresh()" title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
             </div>
+
+            <!-- File Explorer Main Content -->
             <div class="file-list-container">
                 <div class="file-list" id="file-tree"></div>
             </div>
@@ -64,7 +74,12 @@
         </div>
 
         <div id="teams" class="content">
-            <div class="header">Microsoft Teams</div>
+            <div class="teams-header-bar">
+                <div class="header-content">
+                    <img width="50" height="50" src="https://img.icons8.com/fluency-systems-regular/50/microsoft-teams-2019.png" alt="microsoft-teams-2019"/>
+                    <div class="header-title"> Microsoft Teams</div>
+                </div>
+            </div>
             <div id="teams-controls" class="main">
                 <button onclick="fetchContacts()">
                     <i class="fas fa-address-book"></i> Show Contacts
@@ -77,7 +92,12 @@
         </div>
 
         <div id="powerpoint" class="content">
-            <div class="header">Microsoft PowerPoint</div>
+            <div class="powerpoint-header-bar">
+                <div class="header-content">
+                    <img width="50" height="50" src="https://img.icons8.com/fluency-systems-regular/50/ms-powerpoint.png" alt="ms-powerpoint"/>
+                    <div class="header-title"> Microsoft PowerPoint</div>
+                </div>
+            </div>
             <div id="powerpoint-controls" class="main" style="display: none;">
                 <button onclick="prevSlide()">
                     <i class="fas fa-arrow-left"></i>
@@ -98,7 +118,13 @@
         </div>
 
         <div id="excel" class="content">
-            <div class="header">Microsoft Excel</div>
+            <div class="excel-header-bar">
+                <!-- Header Text with Icon -->
+                <div class="header-content">
+                    <img width="50" height="50" src="https://img.icons8.com/fluency-systems-regular/50/ms-excel.png" alt="ms-excel"/> <!-- Excel Icon -->
+                    <div class="header-title">Microsoft Excel</div>
+                </div>
+            </div>
             <div id="excel-controls" class="main" style="display: none;">
                 <button onclick="customScrollLeft()">
                     <i class="fas fa-arrow-left"></i>
@@ -131,7 +157,12 @@
         </div>
 
         <div id="word" class="content">
-            <div class="header">Microsoft Word</div>
+            <div class="word-header-bar">
+                <div class="header-content">
+                    <img width="50" height="50" src="https://img.icons8.com/fluency-systems-regular/50/ms-word.png" alt="ms-word"/>
+                    <div class="header-title">Microsoft Word</div>
+                </div>
+            </div>
             <div id="word-controls" class="main" style="display: none;">
                 <button onclick="scrollUpWord()">
                     <i class="fas fa-arrow-up"></i>
@@ -158,7 +189,12 @@
         </div>
 
         <div id="pdf-reader" class="content">
-            <div class="header">PDF Reader</div>
+            <div class="pdf-reader-header-bar">
+                <div class="header-content">
+                    <img width="50" height="50" src="https://img.icons8.com/fluency-systems-regular/50/adobe-acrobat.png" alt="adobe-acrobat"/>
+                    <div class="header-title">PDF Reader</div>
+                </div>
+            </div>
             <div id="pdf-reader-controls" class="main" style="display: none;">
                 <button onclick="scrollUpPdf()">
                     <i class="fas fa-arrow-up"></i>
@@ -191,7 +227,12 @@
         </div>
 
         <div id="chrome" class="content">
-            <div class="header">Google Chrome</div>
+            <div class="chrome-header-bar">
+                <div class="header-content">
+                    <img width="50" height="50" src="https://img.icons8.com/fluency-systems-regular/50/chrome.png" alt="chrome"/>
+                    <div class="header-title">Google Chrome</div>
+                </div>
+            </div>
             <div id="chrome-controls" class="main">
                 <button onclick="goHome()">
                     <i class="fas fa-home"></i>
@@ -234,38 +275,40 @@
                 </button>
             </div>
             <div id="navigation-mode" class="navigation-mode" style="display: none;">
-                <input type="text" id="search-box" placeholder="Type URL or query">
-                <button onclick="search()">Search</button>
-                <button onclick="navigateUp()">
-                    <i class="fas fa-arrow-up"></i>
-                </button>
-                <button onclick="navigateDown()">
-                    <i class="fas fa-arrow-down"></i>
-                </button>
-                <button onclick="clickLink()">Access Link</button>
-                <button id="close-navigation-mode" onclick="closeNavigationMode()" style="display: none;">
-                    <i class="fas fa-times"></i> Close Navigation Mode
-                </button>
+                <div id="navigation-mode-controls" class="main">
+                    <input type="text" id="search-box" placeholder="Type URL or query">
+                    <button onclick="search()">Search</button>
+                    <button onclick="navigateUp()">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button onclick="navigateDown()">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                    <button onclick="clickLink()">Access Link</button>
+                    <button id="close-navigation-mode" onclick="closeNavigationMode()" style="display: none;">
+                        <i class="fas fa-times"></i> Close Navigation Mode
+                    </button>
+                </div>
             </div>
         </div>
 
         <div id="skype" class="content">
-            <div class="header">Skype</div>
+            <div class="header skype-header">Skype</div>
             <div id="skype-controls" class="main" style="display: none;">
                 <!-- Container for dropdown and message box -->
-              <div class="contact-area">
+                <div class="contact-area">
                     <!-- Dropdown to select a contact -->
-                  <select id="contact-list">
+                    <select id="contact-list">
                         <option value="" disabled selected>Select a contact</option>
-                     <!-- Contacts will be populated here -->
-                 </select>
+                        <!-- Contacts will be populated here -->
+                    </select>
 
-                  <!-- Text area for typing messages -->
-                  <textarea id="message-box" placeholder="Type your message here"></textarea>
-              </div>
+                    <!-- Text area for typing messages -->
+                    <textarea id="message-box" placeholder="Type your message here"></textarea>
+                </div>
 
-              <!-- Buttons for actions -->
-              <div class="button-group">
+                <!-- Buttons for actions -->
+                <div class="button-group">
                     <button onclick="callSkypeUser()">
                         <i class="fa-solid fa-phone"></i> Call
                     </button>
@@ -278,6 +321,7 @@
                 </div>
             </div>
         </div>
+
 
 
         <div id="partition-selection" class="partition-selection">

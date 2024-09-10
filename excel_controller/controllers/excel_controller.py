@@ -14,6 +14,7 @@ class ExcelWorkerThread(WorkerThread):
         """Initializes the Excel application."""
         try:
             self.app = xw.App(visible=True)  # Open Excel in visible mode
+            self.app.display_alerts = False  # Prevent Excel dialogs
         except Exception as e:
             print(f"Failed to initialize Excel: {e}")
             self.app = None
@@ -58,9 +59,10 @@ class ExcelController:
         return True, "Workbook loaded successfully."
 
     def close_workbook(self):
+        """Closes the currently open workbook and cleans up resources."""
         if self.worker_thread:
             self.worker_thread.add_to_queue(self.worker_thread.close_workbook)
-            self.cleanup()
+            self.cleanup()  # Call cleanup after closing the workbook
             return True, "Workbook closed successfully."
         return False, "No active workbook to close."
 
@@ -120,7 +122,9 @@ class ExcelController:
     def cleanup(self):
         """Cleanup resources and stop the worker thread."""
         if self.worker_thread:
+            # Ensure to close the workbook and quit Excel before stopping the thread
             self.worker_thread.add_to_queue(self.worker_thread.quit_excel)
             self.worker_thread.stop()
             self.worker_thread.join()
             self.worker_thread = None
+

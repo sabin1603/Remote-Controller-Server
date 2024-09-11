@@ -23,13 +23,13 @@ ROOT_PDF_DIR = BASE_DIR
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w@+#pu*#ss+qujrafhq1l+yhpd6w+4bi*!%-!*rn_#ki1&jy86'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["192.168.0.157", "127.0.0.1", "172.20.10.6"]
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-w@+#pu*#ss+qujrafhq1l+yhpd6w+4bi*!%-!*rn_#ki1&jy86'
 
 # Application definition
 

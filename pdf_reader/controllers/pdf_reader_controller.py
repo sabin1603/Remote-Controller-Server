@@ -16,10 +16,12 @@ class PDFWorkerThread(WorkerThread):
 
     def initialize_acrobat(self):
         """Initializes the Adobe Acrobat application."""
+        if self.app:
+            try:
+                self.quit_acrobat
+            except Exception as e:
+                print("Error: " + e)
         try:
-            # Ensure no instance is already running
-            self.quit_acrobat()
-
             # Start a new Adobe Acrobat instance
             self.process = subprocess.Popen([ADOBE_ACROBAT_PATH], shell=True)
             print("Adobe Acrobat initialized successfully.")
@@ -65,6 +67,7 @@ class PDFWorkerThread(WorkerThread):
                 self.process = None
             except Exception as e:
                 print(f"Failed to close PDF: {e}")
+                self.cleanup()
 
     def quit_acrobat(self):
         """Quits the Adobe Acrobat application."""
@@ -167,7 +170,7 @@ class PDFController:
     def cleanup(self):
         """Cleanup resources and stop the worker thread."""
         if self.worker_thread:
-            self.worker_thread.add_to_queue(self.worker_thread.close_pdf)
+            self.worker_thread.add_to_queue(self.worker_thread.quit_acrobat)
             self.worker_thread.stop()
             self.worker_thread.join()
             self.worker_thread = None

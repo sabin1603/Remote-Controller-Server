@@ -12,6 +12,11 @@ class ExcelWorkerThread(WorkerThread):
 
     def initialize_excel(self):
         """Initializes the Excel application."""
+        if self.app:
+            try:
+                self.quit_excel()
+            except Exception as e:
+                print("Error: " + e)
         try:
             self.app = xw.App(visible=True)  # Open Excel in visible mode
             self.app.display_alerts = False  # Prevent Excel dialogs
@@ -25,13 +30,15 @@ class ExcelWorkerThread(WorkerThread):
         self.workbook = self.app.books.open(full_path)
 
     def close_workbook(self):
-        """Closes the Excel workbook."""
+        """Closes the Excel workbook and logs any errors."""
         if self.workbook:
             try:
                 self.workbook.close()
                 self.workbook = None
             except Exception as e:
-                print (f"Failed to close workbook: {e}")
+                print(f"Failed to close workbook: {e}")
+                # Retry or cleanup resources if needed
+                self.cleanup()
 
     def quit_excel(self):
         """Quits the Excel application."""
@@ -122,9 +129,9 @@ class ExcelController:
     def cleanup(self):
         """Cleanup resources and stop the worker thread."""
         if self.worker_thread:
-            # Ensure to close the workbook and quit Excel before stopping the thread
-            self.worker_thread.add_to_queue(self.worker_thread.quit_excel)
-            self.worker_thread.stop()
-            self.worker_thread.join()
-            self.worker_thread = None
+            # Ensure to close the workbook/document and quit the application before stopping the thread
+            self.worker_thread.add_to_queue(self.worker_thread.quit_excel)  # for Excel
+            self.worker_thread.add_to_queue(self.worker_thread.stop)  # Stops the thread
+            self.worker_thread.join()  # Wait until the thread is fully terminated
+            self.worker_thread = None  # Clean up the reference
 

@@ -15,6 +15,11 @@ class WordWorkerThread(WorkerThread):
 
     def initialize_word(self):
         """Initializes the Word application."""
+        if self.app:
+            try:
+                self.quit_word()
+            except Exception as e:
+                print("Error: " + e)
         try:
             self.app = win32com.client.Dispatch("Word.Application")
             self.app.Visible = True
@@ -50,13 +55,15 @@ class WordWorkerThread(WorkerThread):
             raise Exception(error_msg)
 
     def close_document(self):
-        """Closes the Word document."""
+        """Closes the Word document and logs any errors."""
         if self.document:
             try:
                 self.document.Close()
                 self.document = None
             except Exception as e:
-                print (f"Failed to close document: {e}")
+                print(f"Failed to close document: {e}")
+                # Retry or cleanup resources if needed
+                self.cleanup()
 
     def scroll_up(self):
         """Scrolls up in the Word document."""
@@ -171,7 +178,8 @@ class WordController:
     def cleanup(self):
         """Cleanup resources and stop the worker thread."""
         if self.worker_thread:
-            self.worker_thread.add_to_queue(self.worker_thread.quit_word)
-            self.worker_thread.stop()
-            self.worker_thread.join()
-            self.worker_thread = None
+            # Ensure to close the document and quit the application before stopping the thread
+            self.worker_thread.add_to_queue(self.worker_thread.quit_word)  # for Word
+            self.worker_thread.add_to_queue(self.worker_thread.stop)  # Stops the thread
+            self.worker_thread.join()  # Wait until the thread is fully terminated
+            self.worker_thread = None  # Clean up the reference

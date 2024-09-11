@@ -15,6 +15,11 @@ class PowerPointWorkerThread(WorkerThread):
 
     def initialize_powerpoint(self):
         """Initializes the PowerPoint application."""
+        if self.app:
+            try:
+                self.quit_powerpoint()
+            except Exception as e:
+                print("Error: "+ e)
         try:
             self.app = win32com.client.Dispatch("PowerPoint.Application")
             self.app.Visible = True
@@ -56,6 +61,7 @@ class PowerPointWorkerThread(WorkerThread):
                 self.presentation = None
             except Exception as e:
                 print(f"Failed to close presentation: {e}")
+                self.cleanup()
 
     def quit_powerpoint(self):
         """Quits the PowerPoint application."""
@@ -139,7 +145,8 @@ class PowerPointController:
     def cleanup(self):
         """Cleanup resources and stop the worker thread."""
         if self.worker_thread:
+            # Ensure to close the presentation and quit the application before stopping the thread
             self.worker_thread.add_to_queue(self.worker_thread.quit_powerpoint)
-            self.worker_thread.stop()
-            self.worker_thread.join()
-            self.worker_thread = None
+            self.worker_thread.add_to_queue(self.worker_thread.stop)  # Stops the thread
+            self.worker_thread.join()  # Wait until the thread is fully terminated
+            self.worker_thread = None  # Clean up the reference

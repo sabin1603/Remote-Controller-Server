@@ -1,3 +1,6 @@
+from django.http import JsonResponse
+from pywinauto import Application
+
 from common.worker_thread import WorkerThread
 import os
 import urllib.parse
@@ -58,6 +61,16 @@ class PDFWorkerThread(WorkerThread):
             print(traceback_msg)
             self.process = None
             raise Exception(error_msg)
+
+    def bring_to_front(self):
+        try:
+            # Connect to the running Adobe Acrobat application
+            app = Application().connect(path="Acrobat.exe")
+            app.top_window().set_focus()  # Set focus to the top window (Adobe Acrobat)
+            return JsonResponse(
+                {'status': 'success', 'message': 'PDF reader (Adobe Acrobat) brought to front successfully.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Failed to bring PDF reader to front: {e}'}, status=500)
 
     def close_pdf(self):
         """Closes the PDF document."""
@@ -127,6 +140,13 @@ class PDFController:
         self.start_worker()
         self.worker_thread.add_to_queue(self.worker_thread.open_pdf, file_path)
         return True, "PDF loaded successfully."
+
+    def bring_to_front(self):
+        """Brings the Acrobat application to the front."""
+        if self.worker_thread:
+            self.worker_thread.add_to_queue(self.worker_thread.bring_to_front)
+            return True, "Acrobat brought to front."
+        return False, "Acrobat application is not running."
 
     def close_pdf(self):
         if self.worker_thread:

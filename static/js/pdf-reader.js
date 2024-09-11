@@ -30,6 +30,19 @@ function openPdf(filePath) {
         .catch(handleApiError);
 }
 
+function bringAcrobatToFront(){
+    fetch('/api/pdf_reader/bring_to_front/')
+    .then(handleApiResponse)
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('Acrobat brought to front successfully.');
+        } else {
+            console.error('Failed to bring Acrobat to front.');
+        }
+    })
+    .catch(handleApiError);
+}
+
 function scrollUpPdf() {
     if (!currentPdf) {
         alert('No PDF selected.');

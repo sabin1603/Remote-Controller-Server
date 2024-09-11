@@ -17,6 +17,11 @@ def open_pdf(request, file_path):
 
     return JsonResponse({"message": message}, status=status)
 
+@require_GET
+def bring_to_front(request):
+    success, message = pdf_controller.bring_to_front()
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
 
 @require_GET
 def close_pdf(request):

@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('open/<path:file_path>/', views.open_pdf, name='open_pdf'),
+    path('bring_to_front/', views.bring_to_front, name='bring_to_front'),
     path('scroll_up/', views.scroll_up, name='scroll_up'),
     path('scroll_down/', views.scroll_down, name='scroll_down'),
     path('zoom_in/', views.zoom_in, name='zoom_in'),

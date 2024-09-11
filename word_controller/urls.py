@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('open_document/<path:file_path>/', views.open_document, name='open_document'),
+    path('bring_to_front/', views.bring_to_front, name='bring_to_front'),
     path('close/', views.close_document, name='close_document'),
     path('scroll_up/', views.scroll_up, name='scroll_up'),
     path('scroll_down/', views.scroll_down, name='scroll_down'),

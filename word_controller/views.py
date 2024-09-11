@@ -18,6 +18,12 @@ def open_document(request, file_path):
     return JsonResponse({"message": message}, status=status)
 
 @require_GET
+def bring_to_front(request):
+    success, message = word_controller.bring_to_front()
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
 def close_document(request):
     success, message = word_controller.close_document()
     status = 200 if success else 500

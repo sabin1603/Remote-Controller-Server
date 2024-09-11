@@ -1,3 +1,6 @@
+from django.http import JsonResponse
+from pywinauto import Application
+
 from common.worker_thread import WorkerThread
 import os
 import urllib.parse
@@ -26,6 +29,15 @@ class WordWorkerThread(WorkerThread):
         except Exception as e:
             print(f"Failed to initialize Word: {e}")
             self.app = None
+
+    def bring_to_front(self):
+        try:
+            # Connect to the running Word application
+            app = Application().connect(path="WINWORD.EXE")
+            app.top_window().set_focus()  # Set focus to the top window (Word)
+            return JsonResponse({'status': 'success', 'message': 'Word brought to front successfully.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Failed to bring Word to front: {e}'}, status=500)
 
     def open_document(self, file_path):
         """Opens a Word document."""
@@ -143,6 +155,13 @@ class WordController:
         self.start_worker()
         self.worker_thread.add_to_queue(self.worker_thread.open_document, file_path)
         return True, "Document loaded successfully."
+
+    def bring_to_front(self):
+        """Brings the Word application to the front."""
+        if self.worker_thread:
+            self.worker_thread.add_to_queue(self.worker_thread.bring_to_front)
+            return True, "Word brought to front."
+        return False, "Word application is not running."
 
     def close_document(self):
         if self.worker_thread:

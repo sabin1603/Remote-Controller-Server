@@ -30,6 +30,19 @@ function openDocument(filePath) {
         .catch(handleApiError);
 }
 
+function bringWordToFront(){
+    fetch('/api/word/bring_to_front/')
+    .then(handleApiResponse)
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('Word brought to front successfully.');
+        } else {
+            console.error('Failed to bring Word to front.');
+        }
+    })
+    .catch(handleApiError);
+}
+
 function scrollUpWord() {
     if (!currentDocument) {
         alert('No document selected.');

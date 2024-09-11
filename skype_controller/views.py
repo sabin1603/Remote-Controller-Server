@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from pywinauto import Application
 from skpy import Skype
 
 # Global Skype process instance
@@ -52,7 +53,6 @@ def open_skype(request):
         return JsonResponse({'status': 'success', 'message': 'Skype opened successfully.'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
-
 
 @require_GET
 def close_skype(request):

@@ -11,6 +11,12 @@ def open_workbook(request, file_path):
     return JsonResponse({"message": message}, status=status)
 
 @require_GET
+def bring_to_front(request):
+    success, message = excel_controller.bring_to_front()
+    status = 200 if success else 500
+    return JsonResponse({"message": message}, status=status)
+
+@require_GET
 def close_workbook(request):
     success, message = excel_controller.close_workbook()
     status = 200 if success else 500

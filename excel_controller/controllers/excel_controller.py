@@ -1,8 +1,9 @@
+from django.http import JsonResponse
 from common.worker_thread import WorkerThread
 import xlwings as xw
 import os
 from django.conf import settings
-
+from pywinauto import application
 
 class ExcelWorkerThread(WorkerThread):
     """Dedicated worker thread for handling Excel operations."""
@@ -28,6 +29,14 @@ class ExcelWorkerThread(WorkerThread):
         """Opens an Excel workbook."""
         full_path = os.path.join(settings.ROOT_EXCEL_DIR, file_path)
         self.workbook = self.app.books.open(full_path)
+
+    def bring_to_front(self):
+        try:
+            app = application.Application().connect(path="EXCEL.EXE")
+            app.top_window().set_focus()
+            return JsonResponse({'status': 'success', 'message': 'Excel brought to front successfully.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Failed to bring Excel to front: {e}'}, status=500)
 
     def close_workbook(self):
         """Closes the Excel workbook and logs any errors."""
@@ -64,6 +73,13 @@ class ExcelController:
         self.start_worker()
         self.worker_thread.add_to_queue(self.worker_thread.open_workbook, file_path)
         return True, "Workbook loaded successfully."
+
+    def bring_to_front(self):
+        """Brings the Excel application to the front."""
+        if self.worker_thread:
+            self.worker_thread.add_to_queue(self.worker_thread.bring_to_front)
+            return True, "Excel brought to front."
+        return False, "Excel application is not running."
 
     def close_workbook(self):
         """Closes the currently open workbook and cleans up resources."""

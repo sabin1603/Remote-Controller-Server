@@ -82,8 +82,9 @@ function nextSlide() {
         .then(handleApiResponse)
         .then(data => {
             if (data.message.includes('Moved to next slide')) {
-                showAlert(data.message);
-            } else {
+                console.log(data.message);
+            }
+            else {
                 showAlert(data.message);
             }
         })
@@ -95,7 +96,7 @@ function prevSlide() {
         .then(handleApiResponse)
         .then(data => {
             if (data.message.includes('Moved to previous slide')) {
-                showAlert(data.message);
+                console.log(data.message);
             } else {
                 showAlert(data.message);
             }

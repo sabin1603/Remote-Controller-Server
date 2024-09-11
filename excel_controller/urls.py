@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('open_workbook/<path:file_path>/', views.open_workbook, name='open_workbook'),
+    path('bring_to_front/', views.bring_to_front, name="bring_to_front"),
     path('close/', views.close_workbook, name='close_workbook'),
     path('next_worksheet/', views.next_worksheet, name='next_worksheet'),
     path('previous_worksheet/', views.previous_worksheet, name='previous_worksheet'),

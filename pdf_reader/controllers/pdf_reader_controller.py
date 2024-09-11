@@ -95,34 +95,42 @@ class PDFWorkerThread(WorkerThread):
 
     def scroll_up(self):
         """Scrolls up in the PDF document."""
+        self.bring_to_front()  # Ensure Acrobat is focused
         pyautogui.scroll(200)
 
     def scroll_down(self):
         """Scrolls down in the PDF document."""
+        self.bring_to_front()  # Ensure Acrobat is focused
         pyautogui.scroll(-200)
 
     def zoom_in(self):
         """Zooms in the PDF document."""
+        self.bring_to_front()  # Ensure Acrobat is focused
         pyautogui.hotkey('ctrl', '=')
 
     def zoom_out(self):
         """Zooms out the PDF document."""
+        self.bring_to_front()  # Ensure Acrobat is focused
         pyautogui.hotkey('ctrl', '-')
 
     def enable_read_mode(self):
         """Enables read mode in the PDF document."""
-        pyautogui.hotkey('ctrl', 'h')  # Adjust the hotkey based on Acrobat's shortcuts
+        self.bring_to_front()  # Ensure Acrobat is focused
+        pyautogui.hotkey('ctrl', 'h')
 
     def disable_read_mode(self):
         """Disables read mode in the PDF document."""
+        self.bring_to_front()  # Ensure Acrobat is focused
         pyautogui.hotkey('ctrl', 'h')  # Toggle to disable read mode
 
     def save_pdf(self):
         """Saves the PDF document."""
+        self.bring_to_front()  # Ensure Acrobat is focused
         pyautogui.hotkey('ctrl', 's')
 
     def print_pdf(self):
         """Opens the print dialog for the PDF document."""
+        self.bring_to_front()  # Ensure Acrobat is focused
         pyautogui.hotkey('ctrl', 'p')
 
 

@@ -7,8 +7,8 @@ import os
 
 def open_teams(request):
     try:
-        teams_path = r"C:\Users\Sabin\AppData\Local\Microsoft\Teams\current\Teams.exe"
-        subprocess.run([teams_path], check=True)  # Adjust this command as needed for your environment
+        teams_path = r"C:\Users\User\AppData\Local\Microsoft\Teams\current\Teams.exe"
+        subprocess.run([teams_path], check=True) 
         return JsonResponse({"message": "Microsoft Teams opened successfully."})
     except Exception as e:
         return JsonResponse({"message": f"Failed to open Microsoft Teams: {e}"}, status=500)
@@ -40,13 +40,8 @@ def start_call(request):
 
         if not user_id:
             return JsonResponse({"error": "User ID is required"}, status=400)
-
-        # Construct the command to initiate a call using Teams
-        teams_path = r"C:\Users\Sabin\AppData\Local\Microsoft\Teams\current\Teams.exe"
-        # Example command; you may need to adjust it based on how Teams can be called
+        teams_path = r"C:\Users\User\AppData\Local\Microsoft\Teams\current\Teams.exe"
         call_command = [teams_path, "--call", user_id]
-
-        # Run the command to initiate the call
         subprocess.run(call_command, check=True)
 
         return JsonResponse({"message": "Call initiated successfully."})

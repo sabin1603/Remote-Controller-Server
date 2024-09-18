@@ -52,4 +52,8 @@ This project was developed to provide a remote control solution for managing and
 
 ---
 
+https://github.com/user-attachments/assets/b57a51b5-b4ef-4574-ab4d-40049cb32196
+
+
+
 **Note**: The Teams module is limited to opening the Teams app due to licensing restrictions. The Skype module uses environment variables for credentials, ensuring secure handling of user information.

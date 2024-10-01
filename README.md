@@ -54,5 +54,6 @@ This project was developed to provide a remote control solution for managing and
 
 https://youtu.be/fsRf4nyZC7g
 
-**Note**: The Teams module is limited to opening the Teams app due to licensing restrictions. The Skype module uses environment variables for credentials, ensuring secure handling of user information.
-The web app has been tested on both mobile devices and PCs, including iPhones and iPads, and is fully functional across all platforms. 
+**Notes**:
+ - The Teams module is limited to opening the Teams app due to licensing restrictions. The Skype module uses environment variables for credentials, ensuring secure handling of user information.
+ - The web app has been tested on both mobile devices and PCs, including iPhones and iPads, and is fully functional across all platforms. 

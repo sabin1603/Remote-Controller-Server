@@ -197,8 +197,7 @@ class WordController:
     def cleanup(self):
         """Cleanup resources and stop the worker thread."""
         if self.worker_thread:
-            # Ensure to close the document and quit the application before stopping the thread
-            self.worker_thread.add_to_queue(self.worker_thread.quit_word)  # for Word
-            self.worker_thread.add_to_queue(self.worker_thread.stop)  # Stops the thread
-            self.worker_thread.join()  # Wait until the thread is fully terminated
-            self.worker_thread = None  # Clean up the reference
+            self.worker_thread.add_to_queue(self.worker_thread.quit_word)  
+            self.worker_thread.add_to_queue(self.worker_thread.stop)  
+            self.worker_thread.join()  
+            self.worker_thread = None  

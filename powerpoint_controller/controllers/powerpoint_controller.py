@@ -145,8 +145,7 @@ class PowerPointController:
     def cleanup(self):
         """Cleanup resources and stop the worker thread."""
         if self.worker_thread:
-            # Ensure to close the presentation and quit the application before stopping the thread
             self.worker_thread.add_to_queue(self.worker_thread.quit_powerpoint)
-            self.worker_thread.add_to_queue(self.worker_thread.stop)  # Stops the thread
-            self.worker_thread.join()  # Wait until the thread is fully terminated
-            self.worker_thread = None  # Clean up the reference
+            self.worker_thread.add_to_queue(self.worker_thread.stop)  
+            self.worker_thread.join()  
+            self.worker_thread = None  

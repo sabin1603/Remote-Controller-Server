@@ -2,6 +2,11 @@
 
 Remote Controller Server is a web-based application that allows users to remotely control various file types and applications on a server PC. The app provides a seamless user interface for accessing, previewing, and managing files and apps remotely.
 
+---
+
+https://youtu.be/fsRf4nyZC7g
+
+
 ## How It Works
 
 ### Overview
@@ -50,9 +55,6 @@ For the full list of dependencies, see the [requirements.txt](./requirements.txt
 
 This project was developed to provide a remote control solution for managing and interacting with various file types and applications on a server PC. The motivation behind the project was to offer a centralized interface for remotely controlling apps like Office applications, Chrome, Adobe Acrobat, and Skype, simplifying file and app management tasks for users who need to operate on a server PC without direct access.
 
----
-
-https://youtu.be/fsRf4nyZC7g
 
 **Notes**:
  - The Teams module is limited to opening the Teams app due to licensing restrictions. The Skype module uses environment variables for credentials, ensuring secure handling of user information.
